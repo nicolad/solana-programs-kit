@@ -74,10 +74,10 @@ export function CpiCard() {
         })
         .transaction();
 
-      // Set up transaction
+      // Set up transaction with confirmed commitment for faster blockhash
       transaction.feePayer = publicKey;
       const { blockhash, lastValidBlockHeight } =
-        await connection.getLatestBlockhash("finalized");
+        await connection.getLatestBlockhash("confirmed");
       transaction.recentBlockhash = blockhash;
 
       // Sign with the power account keypair first
@@ -89,9 +89,13 @@ export function CpiCard() {
       }
       const signedTransaction = await signTransaction(transaction);
 
-      // Send the fully signed transaction
+      // Send the fully signed transaction with skipPreflight to avoid expiration
       const signature = await connection.sendRawTransaction(
-        signedTransaction.serialize()
+        signedTransaction.serialize(),
+        {
+          skipPreflight: false,
+          maxRetries: 3,
+        }
       );
 
       setStatus({
@@ -147,79 +151,114 @@ export function CpiCard() {
     setLoading(true);
     setStatus(null);
 
-    try {
-      const provider = new AnchorProvider(
-        connection,
-        {
-          publicKey,
-          signTransaction: async (tx) => {
-            const signed = await sendTransaction(tx, connection);
-            return tx;
+    // Retry logic for expired signatures
+    const maxAttempts = 3;
+    let attempt = 0;
+
+    while (attempt < maxAttempts) {
+      try {
+        attempt++;
+
+        const provider = new AnchorProvider(
+          connection,
+          {
+            publicKey,
+            signTransaction: async (tx) => {
+              const signed = await sendTransaction(tx, connection);
+              return tx;
+            },
+            signAllTransactions: async (txs) => txs,
           },
-          signAllTransactions: async (txs) => txs,
-        },
-        { commitment: "confirmed" }
-      );
+          { commitment: "confirmed" }
+        );
 
-      const handProgram = new Program(HAND_IDL, provider);
-      const leverProgramId = new PublicKey(LEVER_IDL.address);
+        const handProgram = new Program(HAND_IDL, provider);
+        const leverProgramId = new PublicKey(LEVER_IDL.address);
 
-      // Build and send transaction manually for better control
-      const transaction = await handProgram.methods
-        .pullLever(name)
-        .accounts({
-          power: powerAccount.publicKey,
-          leverProgram: leverProgramId,
-        })
-        .transaction();
+        // Build and send transaction manually for better control
+        const transaction = await handProgram.methods
+          .pullLever(name)
+          .accounts({
+            power: powerAccount.publicKey,
+            leverProgram: leverProgramId,
+          })
+          .transaction();
 
-      transaction.feePayer = publicKey;
-      const { blockhash, lastValidBlockHeight } =
-        await connection.getLatestBlockhash("finalized");
-      transaction.recentBlockhash = blockhash;
+        transaction.feePayer = publicKey;
 
-      // Send transaction
-      const signature = await sendTransaction(transaction, connection);
+        // Get fresh blockhash for each attempt
+        const { blockhash, lastValidBlockHeight } =
+          await connection.getLatestBlockhash("confirmed");
+        transaction.recentBlockhash = blockhash;
 
-      setStatus({
-        type: "success",
-        message: `Transaction sent! Confirming... Sig: ${signature.slice(
-          0,
-          8
-        )}...`,
-      });
+        // Send transaction with options for better reliability
+        const signature = await sendTransaction(transaction, connection, {
+          skipPreflight: false,
+          maxRetries: 2,
+        });
 
-      // Wait for confirmation with longer timeout
-      const confirmation = await connection.confirmTransaction(
-        {
-          signature,
-          blockhash,
-          lastValidBlockHeight,
-        },
-        "confirmed"
-      );
+        setStatus({
+          type: "success",
+          message: `Transaction sent! Confirming... Sig: ${signature.slice(
+            0,
+            8
+          )}...`,
+        });
 
-      if (confirmation.value.err) {
-        throw new Error(`Transaction failed: ${confirmation.value.err}`);
+        // Wait for confirmation
+        const confirmation = await connection.confirmTransaction(
+          {
+            signature,
+            blockhash,
+            lastValidBlockHeight,
+          },
+          "confirmed"
+        );
+
+        if (confirmation.value.err) {
+          throw new Error(`Transaction failed: ${confirmation.value.err}`);
+        }
+
+        // Toggle power state
+        setIsPowerOn((prev) => !prev);
+        setStatus({
+          type: "success",
+          message: `${name} pulled the lever! Power is now ${
+            !isPowerOn ? "ON" : "OFF"
+          }. Tx: ${signature.slice(0, 8)}...`,
+        });
+
+        // Success - exit retry loop
+        break;
+      } catch (error: any) {
+        console.error(`Pull lever error (attempt ${attempt}):`, error);
+
+        // Check if this is a blockhash expiration error
+        const isExpiredError =
+          error.message?.includes("block height exceeded") ||
+          error.message?.includes("expired") ||
+          error.message?.includes("Blockhash not found");
+
+        if (isExpiredError && attempt < maxAttempts) {
+          // Retry with fresh blockhash
+          setStatus({
+            type: "error",
+            message: `Transaction expired, retrying (${attempt}/${maxAttempts})...`,
+          });
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          continue;
+        }
+
+        // Final attempt failed or non-retryable error
+        setStatus({
+          type: "error",
+          message: error.message || "Failed to pull lever",
+        });
+        break;
       }
-
-      // Toggle power state
-      setIsPowerOn((prev) => !prev);
-      setStatus({
-        type: "success",
-        message: `${name} pulled the lever! Power is now ${
-          !isPowerOn ? "ON" : "OFF"
-        }. Tx: ${signature.slice(0, 8)}...`,
-      });
-    } catch (error: any) {
-      console.error("Pull lever error:", error);
-      setStatus({
-        type: "error",
-        message: error.message || "Failed to pull lever",
-      });
-    } finally {
-      setLoading(false);
     }
+
+    setLoading(false);
   };
 
   if (!publicKey) {
