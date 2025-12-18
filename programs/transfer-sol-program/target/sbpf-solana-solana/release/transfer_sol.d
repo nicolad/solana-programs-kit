@@ -1,0 +1,1 @@
+/Users/vadimnicolai/Public/solana-lib/transfer-sol-program/target/sbpf-solana-solana/release/transfer_sol.so: /Users/vadimnicolai/Public/solana-lib/transfer-sol-program/programs/transfer-sol/src/lib.rs
