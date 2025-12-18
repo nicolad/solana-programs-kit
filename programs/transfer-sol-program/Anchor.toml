@@ -1,13 +1,17 @@
 [features]
 seeds = false
+
 [programs.localnet]
+transfer_sol = "4fQVnLWKKKYxtxgGn7Haw8v2g2Hzbu8K61JvWKvqAi7W"
+
+[programs.devnet]
 transfer_sol = "4fQVnLWKKKYxtxgGn7Haw8v2g2Hzbu8K61JvWKvqAi7W"
 
 [registry]
 url = "https://anchor.projectserum.com"
 
 [provider]
-cluster = "localnet"
+cluster = "devnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]

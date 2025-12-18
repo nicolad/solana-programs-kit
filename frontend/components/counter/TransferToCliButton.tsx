@@ -7,7 +7,7 @@ import {
   Transaction,
 } from "@solana/web3.js";
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@mantine/core";
 import { useProgram } from "./hooks/useProgram";
 import { toast } from "sonner";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -70,16 +70,34 @@ export function TransferToCliButton() {
       disabled={isTransferring}
       variant="outline"
       size="sm"
-      className="text-xs border-blue-500/30 hover:border-blue-500/50 hover:bg-blue-500/10"
+      styles={{
+        root: {
+          borderColor: "rgba(59, 130, 246, 0.3)",
+          "&:hover": {
+            borderColor: "rgba(59, 130, 246, 0.5)",
+            background: "rgba(59, 130, 246, 0.1)",
+          },
+        },
+      }}
     >
       {isTransferring ? (
         <>
-          <div className="w-3 h-3 border-2 border-blue-400 border-t-transparent rounded-full animate-spin mr-2"></div>
+          <div
+            style={{
+              width: "12px",
+              height: "12px",
+              border: "2px solid rgb(96 165 250)",
+              borderTopColor: "transparent",
+              borderRadius: "9999px",
+              animation: "spin 1s linear infinite",
+              marginRight: "8px",
+            }}
+          ></div>
           Sending...
         </>
       ) : (
         <>
-          <span className="mr-1">📤</span>
+          <span style={{ marginRight: "4px" }}>📤</span>
           Fund CLI (1.5 SOL)
         </>
       )}

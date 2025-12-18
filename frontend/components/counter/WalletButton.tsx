@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-
+import { Tooltip } from "@mantine/core";
 import React from "react";
 import dynamic from "next/dynamic";
 
@@ -21,21 +15,34 @@ const WalletMultiButton = dynamic(
     loading: () => {
       return (
         <div
-          className="bg-black border border-gray-800 rounded-md animate-pulse flex items-center"
           style={{
             width: "173.47px",
             height: "48px",
             padding: "0 12px",
             gap: "8px",
+            background: "rgb(0, 0, 0)",
+            border: "1px solid rgba(31, 41, 55, 1)",
+            borderRadius: "6px",
+            animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+            display: "flex",
+            alignItems: "center",
           }}
         >
           <div
-            className="rounded-full bg-purple-400/30"
-            style={{ width: "24px", height: "24px" }}
+            style={{
+              width: "24px",
+              height: "24px",
+              borderRadius: "9999px",
+              background: "rgba(192, 132, 252, 0.3)",
+            }}
           ></div>
           <div
-            className="h-4 bg-white/10 rounded-sm"
-            style={{ width: "100px" }}
+            style={{
+              width: "100px",
+              height: "16px",
+              background: "rgba(255, 255, 255, 0.1)",
+              borderRadius: "2px",
+            }}
           ></div>
         </div>
       );
@@ -45,17 +52,10 @@ const WalletMultiButton = dynamic(
 
 export function WalletButton() {
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <div className="inline-block">
-            <WalletMultiButton />
-          </div>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>Devnet Only</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Tooltip label="Devnet Only">
+      <div style={{ display: "inline-block" }}>
+        <WalletMultiButton />
+      </div>
+    </Tooltip>
   );
 }

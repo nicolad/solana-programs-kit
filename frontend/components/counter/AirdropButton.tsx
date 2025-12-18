@@ -2,7 +2,7 @@
 
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@mantine/core";
 import { useProgram } from "./hooks/useProgram";
 import { toast } from "sonner";
 
@@ -86,21 +86,42 @@ export function AirdropButton() {
       disabled={isAirdropping || cooldown > 0}
       variant="outline"
       size="sm"
-      className="text-xs border-purple-500/30 hover:border-purple-500/50 hover:bg-purple-500/10 disabled:opacity-50"
+      styles={{
+        root: {
+          borderColor: "rgba(147, 51, 234, 0.3)",
+          "&:hover": {
+            borderColor: "rgba(147, 51, 234, 0.5)",
+            background: "rgba(147, 51, 234, 0.1)",
+          },
+          "&:disabled": {
+            opacity: 0.5,
+          },
+        },
+      }}
     >
       {isAirdropping ? (
         <>
-          <div className="w-3 h-3 border-2 border-purple-400 border-t-transparent rounded-full animate-spin mr-2"></div>
+          <div
+            style={{
+              width: "12px",
+              height: "12px",
+              borderRadius: "9999px",
+              border: "2px solid rgb(192, 132, 252)",
+              borderTopColor: "transparent",
+              animation: "spin 1s linear infinite",
+              marginRight: "8px",
+            }}
+          ></div>
           Requesting...
         </>
       ) : cooldown > 0 ? (
         <>
-          <span className="mr-1">⏳</span>
+          <span style={{ marginRight: "4px" }}>⏳</span>
           Wait {cooldown}s
         </>
       ) : (
         <>
-          <span className="mr-1">💧</span>
+          <span style={{ marginRight: "4px" }}>💧</span>
           Airdrop 1 SOL
         </>
       )}

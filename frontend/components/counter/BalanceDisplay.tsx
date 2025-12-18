@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useProgram } from "./hooks/useProgram";
 import { AirdropButton } from "./AirdropButton";
 import { TransferToCliButton } from "./TransferToCliButton";
+import { Stack, Group, Text, Loader } from "@mantine/core";
 
 export function BalanceDisplay() {
   const { publicKey, connection } = useProgram();
@@ -44,24 +45,43 @@ export function BalanceDisplay() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-2 w-full">
-      <div className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-800/50 rounded-lg border border-gray-700">
-        <div className="flex items-center gap-2">
-          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-          <span className="text-sm text-gray-400">Balance:</span>
-        </div>
+    <Stack gap="sm" align="center" w="100%">
+      <Group
+        gap="sm"
+        px="md"
+        py="sm"
+        style={{
+          background: "rgba(49, 50, 68, 0.5)",
+          borderRadius: "8px",
+          border: "1px solid rgba(88, 91, 112, 0.3)",
+        }}
+      >
+        <Group gap="xs">
+          <div
+            style={{
+              width: "8px",
+              height: "8px",
+              background: "rgb(166, 227, 161)",
+              borderRadius: "9999px",
+              animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+            }}
+          ></div>
+          <Text size="sm" c="dimmed">
+            Balance:
+          </Text>
+        </Group>
         {isLoading ? (
-          <div className="h-5 w-20 bg-gray-700/50 rounded animate-pulse"></div>
+          <Loader size="xs" color="violet" />
         ) : (
-          <span className="text-sm font-semibold text-purple-400">
+          <Text size="sm" fw={600} c="violet.3">
             {balance !== null ? `${balance.toFixed(4)} SOL` : "—"}
-          </span>
+          </Text>
         )}
-      </div>
-      <div className="flex gap-2">
+      </Group>
+      <Group gap="xs">
         <AirdropButton />
         <TransferToCliButton />
-      </div>
-    </div>
+      </Group>
+    </Stack>
   );
 }

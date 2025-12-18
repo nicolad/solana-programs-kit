@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-
-import { Button } from "@/components/ui/button";
+import { Button } from "@mantine/core";
 import { toast } from "sonner";
 import { useProgram } from "./hooks/useProgram";
 import { useTransactionToast } from "./hooks/useTransactionToast";
@@ -59,13 +58,36 @@ export function DecrementButton() {
     <Button
       onClick={handleDecrement}
       disabled={isLoading || !connected}
-      className="w-[85%] bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white h-11 text-base font-medium"
+      w="85%"
+      h={44}
+      style={{
+        background:
+          "linear-gradient(135deg, rgb(203, 166, 247), rgb(148, 187, 233))",
+      }}
+      styles={{
+        root: {
+          "&:hover": {
+            background:
+              "linear-gradient(135deg, rgb(180, 190, 254), rgb(137, 220, 235))",
+          },
+        },
+      }}
     >
       {isLoading ? (
-        <div className="flex items-center justify-center">
-          <div className="h-5 w-5 rounded-full border-2 border-red-200/50 border-t-red-200 animate-spin mr-2"></div>
+        <>
+          <div
+            style={{
+              width: "20px",
+              height: "20px",
+              borderRadius: "9999px",
+              border: "2px solid rgba(244, 63, 94, 0.5)",
+              borderTopColor: "rgb(244, 63, 94)",
+              animation: "spin 1s linear infinite",
+              marginRight: "8px",
+            }}
+          ></div>
           <span>Processing...</span>
-        </div>
+        </>
       ) : (
         "Decrement Counter"
       )}

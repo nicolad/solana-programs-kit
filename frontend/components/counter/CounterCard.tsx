@@ -1,7 +1,6 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
-
+import { Card, Stack } from "@mantine/core";
 import { BalanceDisplay } from "./BalanceDisplay";
 import { CounterDisplay } from "./CounterDisplay";
 import { DecrementButton } from "./DecrementButton";
@@ -16,17 +15,29 @@ import { WalletAddress } from "./WalletAddress";
  */
 export function CounterCard() {
   return (
-    <Card className="w-[350px] mx-auto border-gray-800 bg-gray-900/70 backdrop-blur-sm shadow-xl shadow-purple-900/10">
-      <CardContent className="flex flex-col items-center py-6 space-y-6">
+    <Card
+      w={350}
+      mx="auto"
+      padding="xl"
+      radius="md"
+      withBorder
+      style={{
+        backgroundColor: "rgba(30, 30, 46, 0.7)",
+        backdropFilter: "blur(12px)",
+        borderColor: "rgba(88, 91, 112, 0.3)",
+        boxShadow: "0 25px 50px -12px rgba(180, 190, 254, 0.15)",
+      }}
+    >
+      <Stack gap="xl" align="center">
         <WalletAddress />
         <WalletButton />
         <BalanceDisplay />
         <CounterDisplay />
-        <div className="flex flex-col w-full items-center space-y-3">
+        <Stack gap="md" w="100%" align="center">
           <IncrementButton />
           <DecrementButton />
-        </div>
-      </CardContent>
+        </Stack>
+      </Stack>
     </Card>
   );
 }

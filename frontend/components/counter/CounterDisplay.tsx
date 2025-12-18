@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useState } from "react";
-
+import { Stack, Text, Loader } from "@mantine/core";
 import { useProgram } from "./hooks/useProgram";
 
 /**
@@ -75,17 +75,36 @@ export function CounterDisplay() {
   }, [connection, counterAddress, program]);
 
   return (
-    <div className="text-center w-full px-5">
-      <p className="text-sm text-muted-foreground mb-2">Current Count:</p>
-      <div className="h-14 flex items-center justify-center">
+    <Stack align="center" w="100%" gap="xs">
+      <Text size="sm" c="dimmed">
+        Current Count:
+      </Text>
+      <div
+        style={{
+          height: "56px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         {isFetchingCounter ? (
-          <div className="h-7 w-7 rounded-full border-3 border-purple-400/30 border-t-purple-400 animate-spin" />
+          <Loader size="lg" color="purple" />
         ) : (
-          <p className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 text-transparent bg-clip-text">
+          <Text
+            size="2.25rem"
+            fw={700}
+            style={{
+              background:
+                "linear-gradient(to right, rgb(168 85 247), rgb(96 165 250))",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
             {counterValue}
-          </p>
+          </Text>
         )}
       </div>
-    </div>
+    </Stack>
   );
 }

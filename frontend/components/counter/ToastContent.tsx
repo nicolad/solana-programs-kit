@@ -1,9 +1,8 @@
 "use client";
 
-import { Check, ClipboardCopy } from "lucide-react";
+import { IconCheck, IconCopy, IconExternalLink } from "@tabler/icons-react";
 import React, { MouseEvent, useState } from "react";
-
-import { Button } from "@/components/ui/button";
+import { Stack, Group, Button, Code } from "@mantine/core";
 
 interface ToastContentProps {
   transactionSignature: string;
@@ -24,49 +23,60 @@ export function ToastContent({
   };
 
   return (
-    <div className="mt-2">
-      <div className="text-xs font-mono bg-black/30 rounded p-1.5 border border-gray-800 mb-3 overflow-auto">
+    <Stack gap="xs" mt="xs">
+      <Code
+        block
+        style={{
+          fontSize: "11px",
+          background: "rgba(0, 0, 0, 0.3)",
+          border: "1px solid rgba(31, 41, 55, 1)",
+          maxWidth: "100%",
+          overflow: "auto",
+        }}
+      >
         {transactionSignature}
-      </div>
-      <div className="flex gap-2 w-full">
+      </Code>
+      <Group gap="xs" w="100%">
         <Button
           variant="outline"
-          size="sm"
-          className={`h-8 px-2 text-xs flex-1 ${
-            isContentCopied
-              ? "bg-purple-900/20 border-purple-500/50"
-              : "bg-black/20 hover:bg-purple-900/20 border-purple-800/30"
-          }`}
+          size="xs"
+          style={{
+            flex: 1,
+            background: isContentCopied
+              ? "rgba(147, 51, 234, 0.2)"
+              : "rgba(0, 0, 0, 0.2)",
+            borderColor: isContentCopied
+              ? "rgba(147, 51, 234, 0.5)"
+              : "rgba(147, 51, 234, 0.3)",
+          }}
           onClick={handleContentCopy}
+          leftSection={
+            isContentCopied ? (
+              <IconCheck size={14} color="rgb(74, 222, 128)" />
+            ) : (
+              <IconCopy size={14} />
+            )
+          }
         >
-          {isContentCopied ? (
-            <Check className="h-3.5 w-3.5 mr-1.5 text-green-400" />
-          ) : (
-            <ClipboardCopy className="h-3.5 w-3.5 mr-1.5" />
-          )}
           {isContentCopied ? "Copied!" : "Copy Signature"}
         </Button>
         <Button
           variant="outline"
-          size="sm"
-          className="h-8 px-2 text-xs flex-1 bg-black/20 hover:bg-blue-900/20 border-blue-800/30"
+          size="xs"
+          style={{
+            flex: 1,
+            background: "rgba(0, 0, 0, 0.2)",
+            borderColor: "rgba(59, 130, 246, 0.3)",
+          }}
           onClick={(e) => {
             e.stopPropagation();
             window.open(explorerUrl, "_blank");
           }}
+          leftSection={<IconExternalLink size={14} />}
         >
-          <svg
-            className="h-3.5 w-3.5 mr-1.5"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
-            <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
-          </svg>
           View in Explorer
         </Button>
-      </div>
-    </div>
+      </Group>
+    </Stack>
   );
 }

@@ -1,11 +1,16 @@
 import "./globals.css";
 import "@solana/wallet-adapter-react-ui/styles.css";
+import "@mantine/core/styles.css";
+import "@mantine/notifications/styles.css";
 
 import { Geist, Geist_Mono } from "next/font/google";
+import { ColorSchemeScript, MantineProvider } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
 
 import type { Metadata } from "next";
 import { SolanaProvider } from "@/components/counter/provider/Solana";
 import { Toaster } from "sonner";
+import { Navigation } from "@/components/Navigation";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,30 +33,47 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable}`}
+      data-mantine-color-scheme="dark"
+      suppressHydrationWarning
+    >
+      <head>
+        <ColorSchemeScript defaultColorScheme="dark" />
+      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-950 text-white`}
+        style={{
+          fontFamily: "var(--font-geist-sans), system-ui, sans-serif",
+          WebkitFontSmoothing: "antialiased",
+          MozOsxFontSmoothing: "grayscale",
+          background: "rgb(3, 7, 18)",
+          color: "white",
+        }}
       >
-        <SolanaProvider>
-          {children}
-          <Toaster
-            position="bottom-right"
-            theme="dark"
-            closeButton
-            richColors={false}
-            toastOptions={{
-              style: {
-                background: "#171717",
-                color: "white",
-                border: "1px solid rgba(75, 85, 99, 0.3)",
-                borderRadius: "0.5rem",
-                padding: "0.75rem 1rem",
-                boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.5)",
-              },
-              className: "toast-container",
-            }}
-          />
-        </SolanaProvider>
+        <MantineProvider defaultColorScheme="dark">
+          <Notifications position="bottom-right" />
+          <SolanaProvider>
+            <Navigation>{children}</Navigation>
+            <Toaster
+              position="bottom-right"
+              theme="dark"
+              closeButton
+              richColors={false}
+              toastOptions={{
+                style: {
+                  background: "#171717",
+                  color: "white",
+                  border: "1px solid rgba(75, 85, 99, 0.3)",
+                  borderRadius: "0.5rem",
+                  padding: "0.75rem 1rem",
+                  boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.5)",
+                },
+                className: "toast-container",
+              }}
+            />
+          </SolanaProvider>
+        </MantineProvider>
       </body>
     </html>
   );
