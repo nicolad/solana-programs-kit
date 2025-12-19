@@ -4,117 +4,52 @@ import {
   Container,
   Title,
   Text,
-  Card,
-  SimpleGrid,
+  Paper,
   Stack,
-  Badge,
+  Card,
   Group,
+  Badge,
 } from "@mantine/core";
-import Link from "next/link";
 import {
+  IconChartLine,
   IconArrowsExchange,
-  IconCurrencyDollar,
+  IconScale,
   IconDroplet,
-  IconClock,
-  IconChartDots,
-  IconBook,
 } from "@tabler/icons-react";
 
-export default function AmmPage() {
-  const ammPrograms = [
+export default function AmmOverviewPage() {
+  const ammTypes = [
     {
-      id: "token-swap",
-      name: "CPAMM (Constant Product)",
+      title: "Constant Product AMM (CPAMM)",
       description:
-        "xy = k formula. Most popular AMM design. Based on Raydium implementation.",
+        "Classic x * y = k formula used by Uniswap V2 and Raydium CPAMM. Simple and efficient for most trading pairs.",
       icon: <IconArrowsExchange size={32} />,
-      href: "/token-swap",
-      badge: "Active",
-      badgeColor: "green",
-      source: "Raydium AMM",
+      examples: ["Raydium CPAMM", "Token Swap Program"],
+      formula: "x * y = k",
     },
     {
-      id: "stable-swap",
-      name: "StableSwap (Curve-style)",
+      title: "Stable Swap AMM",
       description:
-        "Hybrid invariant optimized for pegged assets. Based on Saber implementation.",
-      icon: <IconCurrencyDollar size={32} />,
-      href: "/amm/stable-swap",
-      badge: "Coming Soon",
-      badgeColor: "blue",
-      source: "Saber StableSwap",
+        "Optimized for stablecoin pairs with minimal slippage. Uses amplification coefficient for better price stability.",
+      icon: <IconScale size={32} />,
+      examples: ["Saber StableSwap"],
+      formula: "Curve-style StableSwap",
     },
     {
-      id: "clmm",
-      name: "CLMM (Concentrated Liquidity)",
+      title: "Concentrated Liquidity AMM (CLMM)",
       description:
-        "Liquidity in price ranges for capital efficiency. Based on Orca Whirlpools.",
+        "Allows liquidity providers to concentrate capital within custom price ranges for better capital efficiency.",
       icon: <IconDroplet size={32} />,
-      href: "/amm/clmm",
-      badge: "Coming Soon",
-      badgeColor: "blue",
-      source: "Orca Whirlpools",
-    },
-    {
-      id: "twamm",
-      name: "TWAMM (Time-Weighted)",
-      description:
-        "Execute large orders over time to minimize price impact. Based on OpenBook TWAP.",
-      icon: <IconClock size={32} />,
-      href: "/amm/twamm",
-      badge: "Coming Soon",
-      badgeColor: "blue",
-      source: "OpenBook TWAP",
-    },
-    {
-      id: "weighted",
-      name: "CMMM (Weighted Pools)",
-      description:
-        "x^w * y^(1-w) = k. Generalized constant mean for multi-asset pools.",
-      icon: <IconChartDots size={32} />,
-      href: "/amm/weighted",
-      badge: "Coming Soon",
-      badgeColor: "blue",
-      source: "Custom Implementation",
-    },
-    {
-      id: "orderbook",
-      name: "Order Book DEX",
-      description:
-        "Central limit order book (CLOB) for traditional order matching. Phoenix & OpenBook v2.",
-      icon: <IconBook size={32} />,
-      href: "/amm/orderbook",
-      badge: "Coming Soon",
-      badgeColor: "blue",
-      source: "Phoenix v1 / OpenBook v2",
+      examples: ["Orca Whirlpools", "Raydium CLMM"],
+      formula: "Uniswap V3 style",
     },
   ];
 
   return (
     <Container size="lg" py="xl">
       <Stack gap="xl">
-        <div>
-          <Group gap="md" mb="xs">
-            <Title
-              order={1}
-              style={{
-                background:
-                  "linear-gradient(135deg, rgb(203, 166, 247), rgb(148, 187, 233))",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              Automated Market Makers
-            </Title>
-          </Group>
-          <Text c="dimmed" size="lg" mb="xl">
-            Decentralized liquidity protocols for token swaps
-          </Text>
-        </div>
-
-        <Card
-          padding="lg"
+        <Paper
+          p="xl"
           radius="md"
           withBorder
           style={{
@@ -123,117 +58,121 @@ export default function AmmPage() {
             borderColor: "rgba(88, 91, 112, 0.3)",
           }}
         >
-          <Stack gap="md">
-            <Title order={3}>What is an AMM?</Title>
-            <Text c="dimmed">
-              Automated Market Makers (AMMs) are decentralized exchange
-              protocols that use mathematical formulas to price assets. Instead
-              of traditional order books, AMMs use liquidity pools where users
-              can trade tokens automatically.
-            </Text>
-            <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="md">
-              <div>
-                <Text fw={600} mb="xs">
-                  Constant Product (xy = k)
-                </Text>
-                <Text size="sm" c="dimmed">
-                  The most popular AMM formula. Product of token reserves
-                  remains constant.
-                </Text>
-              </div>
-              <div>
-                <Text fw={600} mb="xs">
-                  Liquidity Pools
-                </Text>
-                <Text size="sm" c="dimmed">
-                  Users provide token pairs and earn fees from trades
-                  proportional to their share.
-                </Text>
-              </div>
-              <div>
-                <Text fw={600} mb="xs">
-                  Decentralized Trading
-                </Text>
-                <Text size="sm" c="dimmed">
-                  No order books, no intermediaries. Trades execute instantly
-                  against the pool.
-                </Text>
-              </div>
-            </SimpleGrid>
-          </Stack>
-        </Card>
+          <Group mb="md">
+            <IconChartLine size={40} style={{ color: "rgb(180, 190, 254)" }} />
+            <div>
+              <Title order={1}>Automated Market Makers (AMMs)</Title>
+              <Text c="dimmed" size="sm">
+                Overview of AMM types and implementations on Solana
+              </Text>
+            </div>
+          </Group>
 
-        <div>
-          <Title order={2} mb="md">
-            Available AMM Programs
+          <Text mt="md">
+            Automated Market Makers (AMMs) are decentralized exchange protocols
+            that use mathematical formulas to price assets and enable trustless
+            token swaps without traditional order books. Each AMM type is
+            optimized for different use cases.
+          </Text>
+        </Paper>
+
+        <Title order={2}>AMM Types</Title>
+
+        <Stack gap="md">
+          {ammTypes.map((amm) => (
+            <Card
+              key={amm.title}
+              shadow="sm"
+              padding="lg"
+              radius="md"
+              withBorder
+              style={{
+                backgroundColor: "rgba(30, 30, 46, 0.5)",
+                borderColor: "rgba(88, 91, 112, 0.3)",
+              }}
+            >
+              <Group align="flex-start" mb="md">
+                <div style={{ color: "rgb(180, 190, 254)" }}>{amm.icon}</div>
+                <div style={{ flex: 1 }}>
+                  <Title order={3}>{amm.title}</Title>
+                  <Text size="sm" c="dimmed" mt="xs">
+                    {amm.description}
+                  </Text>
+                </div>
+              </Group>
+
+              <Group gap="xs" mb="sm">
+                <Text size="sm" fw={600}>
+                  Formula:
+                </Text>
+                <Badge variant="light">{amm.formula}</Badge>
+              </Group>
+
+              <Group gap="xs">
+                <Text size="sm" fw={600}>
+                  Examples:
+                </Text>
+                {amm.examples.map((example) => (
+                  <Badge key={example} variant="outline">
+                    {example}
+                  </Badge>
+                ))}
+              </Group>
+            </Card>
+          ))}
+        </Stack>
+
+        <Paper
+          p="lg"
+          radius="md"
+          withBorder
+          style={{
+            backgroundColor: "rgba(30, 30, 46, 0.5)",
+            borderColor: "rgba(88, 91, 112, 0.3)",
+          }}
+        >
+          <Title order={3} mb="md">
+            Key Concepts
           </Title>
-          <SimpleGrid cols={{ base: 1, md: 2 }} spacing="lg">
-            {ammPrograms.map((program) => (
-              <Link
-                key={program.id}
-                href={program.href}
-                style={{
-                  textDecoration: "none",
-                  pointerEvents:
-                    program.badge === "Coming Soon" ? "none" : "auto",
-                }}
-              >
-                <Card
-                  padding="xl"
-                  radius="md"
-                  withBorder
-                  style={{
-                    backgroundColor: "rgba(30, 30, 46, 0.7)",
-                    backdropFilter: "blur(12px)",
-                    borderColor: "rgba(88, 91, 112, 0.3)",
-                    boxShadow: "0 25px 50px -12px rgba(180, 190, 254, 0.15)",
-                    cursor:
-                      program.badge === "Coming Soon" ? "default" : "pointer",
-                    opacity: program.badge === "Coming Soon" ? 0.6 : 1,
-                    transition: "all 0.3s ease",
-                    height: "100%",
-                  }}
-                  onMouseEnter={(e) => {
-                    if (program.badge !== "Coming Soon") {
-                      e.currentTarget.style.transform = "translateY(-4px)";
-                      e.currentTarget.style.boxShadow =
-                        "0 25px 50px -12px rgba(180, 190, 254, 0.25)";
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (program.badge !== "Coming Soon") {
-                      e.currentTarget.style.transform = "translateY(0)";
-                      e.currentTarget.style.boxShadow =
-                        "0 25px 50px -12px rgba(180, 190, 254, 0.15)";
-                    }
-                  }}
-                >
-                  <Stack gap="md">
-                    <Group justify="space-between">
-                      <div style={{ color: "rgb(203, 166, 247)" }}>
-                        {program.icon}
-                      </div>
-                      <Badge color={program.badgeColor} variant="light">
-                        {program.badge}
-                      </Badge>
-                    </Group>
-                    <div>
-                      <Title order={3} mb="xs">
-                        {program.name}
-                      </Title>
-                      <Text c="dimmed" size="sm" mb="xs">
-                        {program.description}
-                      </Text>
-                      <Text size="xs" c="dimmed" fw={500}>
-                        Source: {program.source}
-                      </Text>
-                    </div>
-                  </Stack>
-                </Card>
-              </Link>
-            ))}
-          </SimpleGrid>
-        </div>
+          <Stack gap="sm">
+            <div>
+              <Text fw={600} size="sm">
+                Liquidity Pools
+              </Text>
+              <Text size="sm" c="dimmed">
+                Smart contracts that hold token reserves and facilitate swaps
+                based on the AMM formula.
+              </Text>
+            </div>
+            <div>
+              <Text fw={600} size="sm">
+                Slippage
+              </Text>
+              <Text size="sm" c="dimmed">
+                The difference between expected and actual execution price,
+                influenced by trade size and pool depth.
+              </Text>
+            </div>
+            <div>
+              <Text fw={600} size="sm">
+                Impermanent Loss
+              </Text>
+              <Text size="sm" c="dimmed">
+                Temporary loss of funds when providing liquidity compared to
+                simply holding the tokens.
+              </Text>
+            </div>
+            <div>
+              <Text fw={600} size="sm">
+                LP Tokens
+              </Text>
+              <Text size="sm" c="dimmed">
+                Tokens representing your share of the liquidity pool, used to
+                redeem your position plus fees.
+              </Text>
+            </div>
+          </Stack>
+        </Paper>
       </Stack>
     </Container>
   );

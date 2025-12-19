@@ -8,7 +8,7 @@ import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 
 import type { Metadata } from "next";
-import { SolanaProvider } from "@/components/counter/provider/Solana";
+import { SolanaProvider } from "@/components/provider/Solana";
 import { Toaster } from "sonner";
 import { Navigation } from "@/components/Navigation";
 
@@ -23,8 +23,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Solana Counter App",
-  description: "A minimal frontend for Anchor counter program",
+  title: "Solana Programs",
+  description: "Interactive frontend for exploring Solana programs",
 };
 
 export default function RootLayout({

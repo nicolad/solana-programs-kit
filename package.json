@@ -1,0 +1,10 @@
+{
+  "name": "solana-lib",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "pnpm --filter frontend build",
+    "dev": "pnpm --filter frontend dev",
+    "lint": "pnpm --filter frontend lint"
+  }
+}
