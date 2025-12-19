@@ -19,11 +19,22 @@ import {
   IconClock,
   IconChartDots,
   IconTableOptions,
+  IconAnchor,
 } from "@tabler/icons-react";
 import { WalletBalance } from "./WalletBalance";
 
 export function Navigation({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+
+  // Custom programs
+  const customPrograms = [
+    {
+      href: "/swap-program",
+      label: "Swap Program",
+      icon: <IconAnchor size={18} />,
+      subtitle: "Custom Anchor swap",
+    },
+  ];
 
   // Core Solana programs
   const corePrograms = [
@@ -74,28 +85,22 @@ export function Navigation({ children }: { children: React.ReactNode }) {
   // AMM programs
   const ammPrograms = [
     {
+      href: "/swap",
+      label: "Token Swap",
+      icon: <IconArrowsExchange size={18} />,
+      subtitle: "CP-AMM DEX",
+    },
+    {
       href: "/amm",
       label: "AMM Overview",
       icon: <IconChartLine size={18} />,
       subtitle: "Automated Market Makers",
     },
     {
-      href: "/amm/raydium-amm",
-      label: "Raydium AMM",
-      icon: <IconArrowsExchange size={18} />,
-      subtitle: "Original AMM",
-    },
-    {
       href: "/amm/raydium-cp-swap",
       label: "Raydium CP Swap",
       icon: <IconArrowsExchange size={18} />,
       subtitle: "Optimized CPAMM",
-    },
-    {
-      href: "/amm/stableswap",
-      label: "StableSwap AMM",
-      icon: <IconScale size={18} />,
-      subtitle: "Saber",
     },
     {
       href: "/amm/raydium-clmm",
@@ -221,6 +226,25 @@ export function Navigation({ children }: { children: React.ReactNode }) {
 
       <AppShell.Navbar p="md" style={{ overflowY: "auto" }}>
         <Stack gap="xs">
+          <AppShell.Section>
+            <Text size="xs" fw={700} c="dimmed" mb="xs">
+              CUSTOM PROGRAMS
+            </Text>
+            {customPrograms.map((program) => (
+              <NavLink
+                key={program.href}
+                component={Link}
+                href={program.href}
+                label={program.label}
+                description={program.subtitle}
+                leftSection={program.icon}
+                active={pathname === program.href}
+              />
+            ))}
+          </AppShell.Section>
+
+          <Divider my="sm" />
+
           <AppShell.Section>
             <Text size="xs" fw={700} c="dimmed" mb="xs">
               CORE SOLANA PROGRAMS
