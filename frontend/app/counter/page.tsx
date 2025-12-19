@@ -1,6 +1,14 @@
 "use client";
 
-import { Container, Stack, Title, Text } from "@mantine/core";
+import {
+  Container,
+  Stack,
+  Title,
+  Text,
+  SimpleGrid,
+  Paper,
+  Box,
+} from "@mantine/core";
 import { CounterCard } from "@/components/counter/CounterCard";
 
 export default function CounterPage() {
@@ -25,6 +33,47 @@ export default function CounterPage() {
             Increment/Decrement counter on-chain
           </Text>
         </div>
+
+        <Box w="100%" maw={900}>
+          <Title order={3} mb="md" ta="center">
+            What is a Counter Program?
+          </Title>
+          <Text size="sm" c="dimmed" mb="xl" ta="center">
+            A simple on-chain program that demonstrates state management in
+            Solana. The counter stores a value on-chain and provides
+            instructions to modify it.
+          </Text>
+
+          <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="lg" mb="xl">
+            <Paper p="md" withBorder>
+              <Title order={5} mb="xs">
+                State Persistence
+              </Title>
+              <Text size="sm" c="dimmed">
+                Data is stored permanently on-chain in a PDA account.
+              </Text>
+            </Paper>
+
+            <Paper p="md" withBorder>
+              <Title order={5} mb="xs">
+                Increment/Decrement
+              </Title>
+              <Text size="sm" c="dimmed">
+                Two instructions modify the counter value atomically.
+              </Text>
+            </Paper>
+
+            <Paper p="md" withBorder>
+              <Title order={5} mb="xs">
+                Account-Based Model
+              </Title>
+              <Text size="sm" c="dimmed">
+                Demonstrates Solana&apos;s unique account storage pattern.
+              </Text>
+            </Paper>
+          </SimpleGrid>
+        </Box>
+
         <CounterCard />
       </Stack>
     </Container>

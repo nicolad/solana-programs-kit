@@ -93,13 +93,11 @@ export function useFavorites() {
     }
 
     const program = getProgram();
-    const favoritesPDA = getFavoritesPDA(publicKey);
 
     await program.methods
       .set_favorites(new anchor.BN(number), color, hobbies)
       .accounts({
         user: publicKey,
-        favorites: favoritesPDA,
       })
       .rpc();
 
@@ -113,6 +111,7 @@ export function useFavorites() {
     } else {
       setFavoritesData(null);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connected, publicKey]);
 
   return {

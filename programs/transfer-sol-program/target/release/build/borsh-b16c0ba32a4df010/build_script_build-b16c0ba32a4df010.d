@@ -1,5 +1,0 @@
-/Users/vadimnicolai/Public/solana-lib/transfer-sol-program/target/release/build/borsh-b16c0ba32a4df010/build_script_build-b16c0ba32a4df010: /Users/vadimnicolai/.cargo/registry/src/index.crates.io-6f17d22bba15001f/borsh-1.6.0/build.rs
-
-/Users/vadimnicolai/Public/solana-lib/transfer-sol-program/target/release/build/borsh-b16c0ba32a4df010/build_script_build-b16c0ba32a4df010.d: /Users/vadimnicolai/.cargo/registry/src/index.crates.io-6f17d22bba15001f/borsh-1.6.0/build.rs
-
-/Users/vadimnicolai/.cargo/registry/src/index.crates.io-6f17d22bba15001f/borsh-1.6.0/build.rs:

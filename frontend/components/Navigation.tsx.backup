@@ -1,0 +1,498 @@
+"use client";
+
+import { AppShell, Stack, NavLink, Title, Text, Divider } from "@mantine/core";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+import {
+  IconArrowsExchange,
+  IconChartLine,
+  IconScale,
+  IconBoxMultiple,
+  IconBook,
+  IconClockHour3,
+  IconLayersLinked,
+  IconCoin,
+  IconDroplet,
+  IconDatabase,
+  IconShieldCheck,
+  IconPlus,
+  IconTransfer,
+  IconHeart,
+  IconHandGrab,
+  IconClock,
+  IconChartDots,
+  IconTableOptions,
+  IconBolt,
+  IconWallet,
+  IconCoins,
+  IconLock,
+  IconTrendingUp,
+} from "@tabler/icons-react";
+import { WalletBalance } from "./WalletBalance";
+
+export function Navigation({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+
+  const generalPrograms = [
+    {
+      href: "/counter",
+      label: "Counter",
+      icon: <IconChartDots size={18} />,
+    },
+    {
+      href: "/favorites",
+      label: "Favorites",
+      icon: <IconHeart size={18} />,
+    },
+    {
+      href: "/cpi",
+      label: "CPI",
+      icon: <IconHandGrab size={18} />,
+    },
+    {
+      href: "/checking-accounts",
+      label: "Checking Accounts",
+      icon: <IconShieldCheck size={18} />,
+    },
+    {
+      href: "/create-account",
+      label: "Create Account",
+      icon: <IconPlus size={18} />,
+    },
+    {
+      href: "/transfer-sol",
+      label: "Transfer SOL",
+      icon: <IconTransfer size={18} />,
+    },
+  ];
+
+  const corePrograms = [
+    {
+      href: "/core/token",
+      label: "Token Program",
+      icon: <IconCoin size={18} />,
+      subtitle: "SPL Token",
+    },
+    {
+      href: "/core/token-2022",
+      label: "Token-2022",
+      icon: <IconCoins size={18} />,
+      subtitle: "Extensions",
+    },
+    {
+      href: "/core/associated-token",
+      label: "Associated Token",
+      icon: <IconWallet size={18} />,
+      subtitle: "ATA",
+    },
+    {
+      href: "/core/memo",
+      label: "Memo",
+      icon: <IconDatabase size={18} />,
+      subtitle: "On-chain notes",
+    },
+    {
+      href: "/core/compute-budget",
+      label: "Compute Budget",
+      icon: <IconBolt size={18} />,
+      subtitle: "Priority fees",
+    },
+    {
+      href: "/core/address-lookup",
+      label: "Address Lookup",
+      icon: <IconTableOptions size={18} />,
+      subtitle: "LUT",
+    },
+    {
+      href: "/core/system",
+      label: "System Program",
+      icon: <IconDatabase size={18} />,
+      subtitle: "Core",
+    },
+  ];
+
+  const ammPrograms = [
+    {
+      href: "/amm",
+      label: "AMM Overview",
+      icon: <IconChartLine size={18} />,
+    },
+    {
+      href: "/token-swap",
+      label: "CPAMM (xy=k)",
+      icon: <IconArrowsExchange size={18} />,
+      subtitle: "Token Swap",
+    },
+    {
+      href: "/amm/raydium-cpmm",
+      label: "Raydium CPMM",
+      icon: <IconArrowsExchange size={18} />,
+      subtitle: "Constant Product",
+    },
+    {
+      href: "/amm/stableswap",
+      label: "StableSwap",
+      icon: <IconScale size={18} />,
+      subtitle: "Saber",
+    },
+    {
+      href: "/amm/clmm",
+      label: "CLMM",
+      icon: <IconDroplet size={18} />,
+      subtitle: "Orca Whirlpools",
+    },
+    {
+      href: "/amm/raydium-clmm",
+      label: "Raydium CLMM",
+      icon: <IconDroplet size={18} />,
+      subtitle: "Concentrated",
+    },
+  ];
+
+  const orderbookPrograms = [
+    {
+      href: "/orderbook/phoenix",
+      label: "Phoenix",
+      icon: <IconBook size={18} />,
+      subtitle: "CLOB",
+    },
+    {
+      href: "/orderbook/openbook-v2",
+      label: "OpenBook v2",
+      icon: <IconBook size={18} />,
+      subtitle: "CLOB",
+    },
+  ];
+
+  const defiPrograms = [
+    {
+      href: "/defi/mango",
+      label: "Mango v4",
+      icon: <IconTrendingUp size={18} />,
+      subtitle: "Perps & Margin",
+    },
+    {
+      href: "/defi/drift",
+      label: "Drift",
+      icon: <IconTrendingUp size={18} />,
+      subtitle: "Perpetuals",
+    },
+    {
+      href: "/defi/marginfi",
+      label: "MarginFi v2",
+      icon: <IconTrendingUp size={18} />,
+      subtitle: "Lending",
+    },
+  ];
+
+  const infrastructurePrograms = [
+    {
+      href: "/infrastructure/merkle-distributor",
+      label: "Merkle Distributor",
+      icon: <IconCoins size={18} />,
+      subtitle: "Airdrops",
+    },
+    {
+      href: "/infrastructure/token-vesting",
+      label: "Token Vesting",
+      icon: <IconLock size={18} />,
+      subtitle: "Time locks",
+    },
+    {
+      href: "/infrastructure/clockwork",
+      label: "Clockwork",
+      icon: <IconClock size={18} />,
+      subtitle: "Automation",
+    },
+  ];
+
+  const oraclePrograms = [
+    {
+      href: "/oracle/twap",
+      label: "OpenBook TWAP",
+      icon: <IconClockHour3 size={18} />,
+      subtitle: "Time-weighted",
+    },
+  ];
+
+  const stakingPrograms = [
+    {
+      href: "/staking/single-pool",
+      label: "Single Pool",
+      icon: <IconCoin size={18} />,
+      subtitle: "Single-sided",
+    },
+    {
+      href: "/staking/stake-pool",
+      label: "Stake Pool",
+      icon: <IconLayersLinked size={18} />,
+      subtitle: "Validators",
+    },
+  ];
+
+  return (
+    <AppShell
+      navbar={{
+        width: 280,
+        breakpoint: "sm",
+      }}
+      padding="md"
+      style={{
+        background: "rgb(3, 7, 18)",
+      }}
+    >
+      <AppShell.Navbar
+        p="md"
+        style={{
+          background: "rgba(24, 24, 37, 0.9)",
+          backdropFilter: "blur(12px)",
+          borderRight: "1px solid rgba(88, 91, 112, 0.2)",
+        }}
+      >
+        <AppShell.Section mb="md">
+          <Link href="/" style={{ textDecoration: "none" }}>
+            <Title
+              order={3}
+              mb="md"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgb(203, 166, 247), rgb(148, 187, 233))",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                cursor: "pointer",
+              }}
+            >
+              Solana Programs
+            </Title>
+          </Link>
+          <WalletBalance />
+        </AppShell.Section>
+
+        <AppShell.Section
+          grow
+          style={{
+            overflowY: "auto",
+            overflowX: "hidden",
+          }}
+        >
+          <Stack gap="md">
+            {/* General Programs */}
+            <Stack gap="xs">
+              <Text size="xs" c="dimmed" fw={600} tt="uppercase" px="sm">
+                General Programs
+              </Text>
+              {generalPrograms.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  style={{ textDecoration: "none" }}
+                >
+                  <NavLink
+                    label={item.label}
+                    leftSection={item.icon}
+                    active={pathname === item.href}
+                    variant="subtle"
+                    style={{
+                      borderRadius: "0.5rem",
+                    }}
+                  />
+                </Link>
+              ))}
+            </Stack>
+
+            <Divider color="rgba(88, 91, 112, 0.3)" />
+
+            {/* Core Solana Programs */}
+            <Stack gap="xs">
+              <Text size="xs" c="dimmed" fw={600} tt="uppercase" px="sm">
+                Core Solana Programs
+              </Text>
+              {corePrograms.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  style={{ textDecoration: "none" }}
+                >
+                  <NavLink
+                    label={item.label}
+                    description={"subtitle" in item ? item.subtitle : undefined}
+                    leftSection={item.icon}
+                    active={pathname === item.href}
+                    variant="subtle"
+                    style={{
+                      borderRadius: "0.5rem",
+                    }}
+                  />
+                </Link>
+              ))}
+            </Stack>
+
+            <Divider color="rgba(88, 91, 112, 0.3)" />
+
+            {/* AMM Programs */}
+            <Stack gap="xs">
+              <Text size="xs" c="dimmed" fw={600} tt="uppercase" px="sm">
+                AMM Programs
+              </Text>
+              {ammPrograms.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  style={{ textDecoration: "none" }}
+                >
+                  <NavLink
+                    label={item.label}
+                    description={"subtitle" in item ? item.subtitle : undefined}
+                    leftSection={item.icon}
+                    active={pathname === item.href}
+                    variant="subtle"
+                    style={{
+                      borderRadius: "0.5rem",
+                    }}
+                  />
+                </Link>
+              ))}
+            </Stack>
+
+            <Divider color="rgba(88, 91, 112, 0.3)" />
+
+            {/* Order Book */}
+            <Stack gap="xs">
+              <Text size="xs" c="dimmed" fw={600} tt="uppercase" px="sm">
+                Order Book (CLOB)
+              </Text>
+              {orderbookPrograms.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  style={{ textDecoration: "none" }}
+                >
+                  <NavLink
+                    label={item.label}
+                    description={"subtitle" in item ? item.subtitle : undefined}
+                    leftSection={item.icon}
+                    active={pathname === item.href}
+                    variant="subtle"
+                    style={{
+                      borderRadius: "0.5rem",
+                    }}
+                  />
+                </Link>
+              ))}
+            </Stack>
+
+            <Divider color="rgba(88, 91, 112, 0.3)" />
+
+            {/* DeFi */}
+            <Stack gap="xs">
+              <Text size="xs" c="dimmed" fw={600} tt="uppercase" px="sm">
+                DeFi Protocols
+              </Text>
+              {defiPrograms.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  style={{ textDecoration: "none" }}
+                >
+                  <NavLink
+                    label={item.label}
+                    description={"subtitle" in item ? item.subtitle : undefined}
+                    leftSection={item.icon}
+                    active={pathname === item.href}
+                    variant="subtle"
+                    style={{
+                      borderRadius: "0.5rem",
+                    }}
+                  />
+                </Link>
+              ))}
+            </Stack>
+
+            <Divider color="rgba(88, 91, 112, 0.3)" />
+
+            {/* Infrastructure */}
+            <Stack gap="xs">
+              <Text size="xs" c="dimmed" fw={600} tt="uppercase" px="sm">
+                Infrastructure
+              </Text>
+              {infrastructurePrograms.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  style={{ textDecoration: "none" }}
+                >
+                  <NavLink
+                    label={item.label}
+                    description={"subtitle" in item ? item.subtitle : undefined}
+                    leftSection={item.icon}
+                    active={pathname === item.href}
+                    variant="subtle"
+                    style={{
+                      borderRadius: "0.5rem",
+                    }}
+                  />
+                </Link>
+              ))}
+            </Stack>
+
+            <Divider color="rgba(88, 91, 112, 0.3)" />
+
+            {/* Oracles */}
+            <Stack gap="xs">
+              <Text size="xs" c="dimmed" fw={600} tt="uppercase" px="sm">
+                Oracles
+              </Text>
+              {oraclePrograms.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  style={{ textDecoration: "none" }}
+                >
+                  <NavLink
+                    label={item.label}
+                    description={"subtitle" in item ? item.subtitle : undefined}
+                    leftSection={item.icon}
+                    active={pathname === item.href}
+                    variant="subtle"
+                    style={{
+                      borderRadius: "0.5rem",
+                    }}
+                  />
+                </Link>
+              ))}
+            </Stack>
+
+            <Divider color="rgba(88, 91, 112, 0.3)" />
+
+            {/* Staking */}
+            <Stack gap="xs">
+              <Text size="xs" c="dimmed" fw={600} tt="uppercase" px="sm">
+                Staking
+              </Text>
+              {stakingPrograms.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  style={{ textDecoration: "none" }}
+                >
+                  <NavLink
+                    label={item.label}
+                    description={"subtitle" in item ? item.subtitle : undefined}
+                    leftSection={item.icon}
+                    active={pathname === item.href}
+                    variant="subtle"
+                    style={{
+                      borderRadius: "0.5rem",
+                    }}
+                  />
+                </Link>
+              ))}
+            </Stack>
+          </Stack>
+        </AppShell.Section>
+      </AppShell.Navbar>
+      <AppShell.Main>{children}</AppShell.Main>
+    </AppShell>
+  );
+}

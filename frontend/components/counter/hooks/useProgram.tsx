@@ -69,7 +69,7 @@ export function useProgram(): UseProgramReturn {
     };
 
     airdropDevnetSol();
-  }, [publicKey]);
+  }, [publicKey, connection]);
 
   return {
     program,

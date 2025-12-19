@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 import { PublicKey, Keypair, SystemProgram } from "@solana/web3.js";
 import {
@@ -54,7 +54,7 @@ export function CpiCard() {
         {
           publicKey,
           signTransaction: async (tx) => {
-            const signed = await sendTransaction(tx, connection);
+            await sendTransaction(tx, connection);
             return tx;
           },
           signAllTransactions: async (txs) => txs,
@@ -126,11 +126,12 @@ export function CpiCard() {
         type: "success",
         message: `Lever initialized! Tx: ${signature.slice(0, 8)}...`,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Initialize error:", error);
       setStatus({
         type: "error",
-        message: error.message || "Initialization failed",
+        message:
+          error instanceof Error ? error.message : "Initialization failed",
       });
     } finally {
       setLoading(false);
@@ -164,7 +165,7 @@ export function CpiCard() {
           {
             publicKey,
             signTransaction: async (tx) => {
-              const signed = await sendTransaction(tx, connection);
+              await sendTransaction(tx, connection);
               return tx;
             },
             signAllTransactions: async (txs) => txs,
@@ -230,14 +231,15 @@ export function CpiCard() {
 
         // Success - exit retry loop
         break;
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error(`Pull lever error (attempt ${attempt}):`, error);
 
         // Check if this is a blockhash expiration error
         const isExpiredError =
-          error.message?.includes("block height exceeded") ||
-          error.message?.includes("expired") ||
-          error.message?.includes("Blockhash not found");
+          error instanceof Error &&
+          (error.message?.includes("block height exceeded") ||
+            error.message?.includes("expired") ||
+            error.message?.includes("Blockhash not found"));
 
         if (isExpiredError && attempt < maxAttempts) {
           // Retry with fresh blockhash
@@ -252,7 +254,8 @@ export function CpiCard() {
         // Final attempt failed or non-retryable error
         setStatus({
           type: "error",
-          message: error.message || "Failed to pull lever",
+          message:
+            error instanceof Error ? error.message : "Failed to pull lever",
         });
         break;
       }
@@ -288,7 +291,7 @@ export function CpiCard() {
           <strong>What is CPI?</strong> A cross-program invocation occurs when
           one program directly invokes instructions of another program, enabling
           composability. This example demonstrates the hand program invoking the
-          lever program's switch_power instruction.{" "}
+          lever program&apos;s switch_power instruction.{" "}
           <Anchor
             href="https://solana.com/docs/core/cpi"
             target="_blank"

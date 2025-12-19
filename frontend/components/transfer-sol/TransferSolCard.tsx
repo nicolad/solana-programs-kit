@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
-import { PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
-import { Card, TextInput, Button, Stack, Text, Group, Alert } from "@mantine/core";
+import { PublicKey, SystemProgram } from "@solana/web3.js";
+import { Card, TextInput, Button, Stack, Text, Alert } from "@mantine/core";
 import { IconInfoCircle, IconCheck, IconX } from "@tabler/icons-react";
 import { IDL } from "@/anchor-idl/transfer-sol-idl";
 import { Program, AnchorProvider, web3, BN } from "@coral-xyz/anchor";
@@ -14,7 +14,10 @@ export function TransferSolCard() {
   const [recipient, setRecipient] = useState("");
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [status, setStatus] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   const transferWithCPI = async () => {
     if (!publicKey) {
@@ -39,7 +42,7 @@ export function TransferSolCard() {
         {
           publicKey,
           signTransaction: async (tx) => {
-            const signed = await sendTransaction(tx, connection);
+            await sendTransaction(tx, connection);
             return tx;
           },
           signAllTransactions: async (txs) => txs,
@@ -64,11 +67,11 @@ export function TransferSolCard() {
       });
       setRecipient("");
       setAmount("");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Transfer error:", error);
       setStatus({
         type: "error",
-        message: error.message || "Transfer failed",
+        message: error instanceof Error ? error.message : "Transfer failed",
       });
     } finally {
       setLoading(false);
@@ -86,7 +89,13 @@ export function TransferSolCard() {
   }
 
   return (
-    <Card shadow="sm" padding="lg" radius="md" withBorder style={{ maxWidth: 500, width: "100%" }}>
+    <Card
+      shadow="sm"
+      padding="lg"
+      radius="md"
+      withBorder
+      style={{ maxWidth: 500, width: "100%" }}
+    >
       <Stack gap="md">
         <Alert icon={<IconInfoCircle size={16} />} color="blue" variant="light">
           Transfer SOL using Cross-Program Invocation to the System Program
@@ -114,7 +123,13 @@ export function TransferSolCard() {
 
         {status && (
           <Alert
-            icon={status.type === "success" ? <IconCheck size={16} /> : <IconX size={16} />}
+            icon={
+              status.type === "success" ? (
+                <IconCheck size={16} />
+              ) : (
+                <IconX size={16} />
+              )
+            }
             color={status.type === "success" ? "green" : "red"}
             variant="light"
           >

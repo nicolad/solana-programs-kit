@@ -24,7 +24,7 @@ export function WalletAddress() {
         description: "Paste this in your terminal to receive SOL",
       });
       setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
+    } catch {
       toast.error("Failed to copy address");
     }
   };

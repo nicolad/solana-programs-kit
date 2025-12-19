@@ -47,13 +47,14 @@ export function AirdropButton() {
 
       // Set 30 second cooldown
       setCooldown(30);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Airdrop error:", error);
 
       if (
-        error.message?.includes("airdrop") ||
-        error.message?.includes("429") ||
-        error.message?.includes("limit")
+        error instanceof Error &&
+        (error.message?.includes("airdrop") ||
+          error.message?.includes("429") ||
+          error.message?.includes("limit"))
       ) {
         toast.error("Airdrop Limit Reached", {
           description: "Daily limit exceeded. Use CLI: solana airdrop 1",
@@ -67,7 +68,8 @@ export function AirdropButton() {
         setCooldown(300); // 5 minutes
       } else {
         toast.error("Airdrop failed", {
-          description: error.message || "Please try again later",
+          description:
+            error instanceof Error ? error.message : "Please try again later",
         });
         setCooldown(60);
       }

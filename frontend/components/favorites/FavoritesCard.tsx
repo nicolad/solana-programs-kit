@@ -12,7 +12,7 @@ import {
   ActionIcon,
   Pill,
 } from "@mantine/core";
-import { IconHeart, IconPlus, IconX } from "@tabler/icons-react";
+import { IconHeart, IconPlus } from "@tabler/icons-react";
 import { useFavorites } from "./hooks/useFavorites";
 
 export function FavoritesCard() {

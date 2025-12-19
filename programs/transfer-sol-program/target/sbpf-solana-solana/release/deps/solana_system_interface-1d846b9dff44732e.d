@@ -1,9 +1,0 @@
-/Users/vadimnicolai/Public/solana-lib/transfer-sol-program/target/sbpf-solana-solana/release/deps/libsolana_system_interface-1d846b9dff44732e.rmeta: /Users/vadimnicolai/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-system-interface-1.0.0/src/lib.rs /Users/vadimnicolai/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-system-interface-1.0.0/src/error.rs /Users/vadimnicolai/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-system-interface-1.0.0/src/instruction.rs
-
-/Users/vadimnicolai/Public/solana-lib/transfer-sol-program/target/sbpf-solana-solana/release/deps/libsolana_system_interface-1d846b9dff44732e.rlib: /Users/vadimnicolai/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-system-interface-1.0.0/src/lib.rs /Users/vadimnicolai/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-system-interface-1.0.0/src/error.rs /Users/vadimnicolai/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-system-interface-1.0.0/src/instruction.rs
-
-/Users/vadimnicolai/Public/solana-lib/transfer-sol-program/target/sbpf-solana-solana/release/deps/solana_system_interface-1d846b9dff44732e.d: /Users/vadimnicolai/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-system-interface-1.0.0/src/lib.rs /Users/vadimnicolai/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-system-interface-1.0.0/src/error.rs /Users/vadimnicolai/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-system-interface-1.0.0/src/instruction.rs
-
-/Users/vadimnicolai/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-system-interface-1.0.0/src/lib.rs:
-/Users/vadimnicolai/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-system-interface-1.0.0/src/error.rs:
-/Users/vadimnicolai/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-system-interface-1.0.0/src/instruction.rs:

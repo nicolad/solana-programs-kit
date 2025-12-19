@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { AppShell, NavLink, Text, Group, Box } from "@mantine/core";
-import { IconHome, IconTransfer, IconPlus } from "@tabler/icons-react";
+import { NavLink, Text, Box } from "@mantine/core";
+import { IconPlus } from "@tabler/icons-react";
 
 interface Program {
   id: string;

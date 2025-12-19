@@ -50,10 +50,11 @@ export function TransferToCliButton() {
       toast.success("Transfer successful!", {
         description: `1.5 SOL sent to CLI wallet for deployment`,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Transfer error:", error);
       toast.error("Transfer failed", {
-        description: error.message || "Please try again",
+        description:
+          error instanceof Error ? error.message : "Please try again",
       });
     } finally {
       setIsTransferring(false);
