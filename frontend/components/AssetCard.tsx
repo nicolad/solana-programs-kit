@@ -2,11 +2,10 @@
 
 import { PublicKey } from "@solana/web3.js";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { Card, Text, Group, Stack, Anchor } from "@mantine/core";
-import { useConnection } from "@solana/wallet-adapter-react";
+import { FC, useEffect, useState } from "react";
+import { Paper, Group, Stack, Text, Anchor } from "@mantine/core";
 
-interface SwapAssetCardProps {
+interface AssetCardProps {
   name: string;
   symbol: string;
   uri: string;
@@ -16,9 +15,8 @@ interface SwapAssetCardProps {
   poolTokenAccount: PublicKey;
 }
 
-export function SwapAssetCard(props: SwapAssetCardProps) {
+export const AssetCard: FC<AssetCardProps> = (props: AssetCardProps) => {
   const [imagePath, setImagePath] = useState<string>("");
-  const { connection } = useConnection();
 
   const nominalBalance = Math.floor(
     props.balance / Math.pow(10, props.decimals)
@@ -29,7 +27,7 @@ export function SwapAssetCard(props: SwapAssetCardProps) {
       const data = await fetch(uri).then((data) => data.json());
       setImagePath(data.image);
     } catch (error) {
-      console.error("Failed to fetch metadata:", error);
+      console.error("Error fetching metadata:", error);
     }
   }
 
@@ -39,38 +37,35 @@ export function SwapAssetCard(props: SwapAssetCardProps) {
     }
   }, [props.uri]);
 
-  const explorerUrl = `https://explorer.solana.com/address/${props.mint.toBase58()}?cluster=devnet`;
-
   return (
-    <Card shadow="sm" padding="lg" radius="md" withBorder>
-      <Group>
+    <Paper shadow="sm" p="lg" radius="md" withBorder>
+      <Group align="flex-start">
         {imagePath && (
-          <div style={{ width: 80, height: 80, position: "relative" }}>
-            <Image
-              src={imagePath}
-              alt={props.name}
-              fill
-              style={{ objectFit: "cover", borderRadius: "50%" }}
-            />
-          </div>
+          <Image
+            className="rounded-full"
+            alt={props.name}
+            src={imagePath}
+            width={80}
+            height={80}
+          />
         )}
         <Stack gap="xs" style={{ flex: 1 }}>
-          <Text fw={700} c="blue">
+          <Text fw={700} c="blue.4">
             {props.name}
           </Text>
-          <Text size="xl" fw={600}>
+          <Text size="lg" fw={600}>
             {nominalBalance}
           </Text>
           <Anchor
-            href={explorerUrl}
+            href={`https://explorer.solana.com/address/${props.mint.toBase58()}?cluster=devnet`}
             target="_blank"
-            rel="noopener noreferrer"
             size="xs"
+            c="dimmed"
           >
-            View on Explorer →
+            See on Explorer →
           </Anchor>
         </Stack>
       </Group>
-    </Card>
+    </Paper>
   );
-}
+};

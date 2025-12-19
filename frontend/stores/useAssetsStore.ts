@@ -1,9 +1,12 @@
+"use client";
+
 import { Program } from "@coral-xyz/anchor";
 import {
   PROGRAM_ID as METADATA_PROGRAM_ID,
   Metadata,
 } from "@metaplex-foundation/mpl-token-metadata";
 import { PublicKey } from "@solana/web3.js";
+import { SwapProgram } from "@/anchor-idl/swap_program";
 import {
   getAssociatedTokenAddressSync,
   getMultipleAccounts as getMultipleTokenAccounts,
@@ -18,13 +21,17 @@ const getPoolAddress = (programId: PublicKey) =>
     programId
   )[0];
 
-const getMetadataAddress = (mint: PublicKey) =>
+const getMetadataAddress = (programId: PublicKey, mint: PublicKey) =>
   PublicKey.findProgramAddressSync(
-    [Buffer.from("metadata"), METADATA_PROGRAM_ID.toBuffer(), mint.toBuffer()],
+    [
+      Buffer.from("metadata"),
+      METADATA_PROGRAM_ID.toBuffer(),
+      mint.toBuffer(),
+    ],
     METADATA_PROGRAM_ID
   )[0];
 
-export interface SwapAsset {
+export interface Asset {
   name: string;
   symbol: string;
   uri: string;
@@ -34,31 +41,31 @@ export interface SwapAsset {
   poolTokenAccount: PublicKey;
 }
 
-export const getSwapAssets = async (
-  program: Program<any>
-): Promise<SwapAsset[]> => {
-  let assets: SwapAsset[];
+export const getAssets = async (
+  program: Program<SwapProgram>
+): Promise<Asset[]> => {
+  let assets: Asset[];
   const poolAddress = getPoolAddress(program.programId);
   const pool = await program.account.liquidityPool.fetch(poolAddress);
   let metadataAddresses: PublicKey[] = [];
   let tokenAccountAddresses: PublicKey[] = [];
   let mintAddresses: PublicKey[] = [];
-
-  pool.assets.forEach((m: PublicKey) => {
-    metadataAddresses.push(getMetadataAddress(m));
+  pool.assets.forEach((m) => {
+    metadataAddresses.push(getMetadataAddress(program.programId, m));
     tokenAccountAddresses.push(
       getAssociatedTokenAddressSync(m, poolAddress, true)
     );
-    mintAddresses.push(m);
+    mintAddresses.push(m); // assuming pool.assets are the mint addresses
   });
-
   const poolTokenAccounts = await getMultipleTokenAccounts(
     program.provider.connection,
     tokenAccountAddresses
   );
 
   const metadataAccounts = (
-    await program.provider.connection.getMultipleAccountsInfo(metadataAddresses)
+    await program.provider.connection.getMultipleAccountsInfo(
+      metadataAddresses
+    )
   ).map((accountInfo) =>
     accountInfo != null ? Metadata.deserialize(accountInfo?.data) : null
   );

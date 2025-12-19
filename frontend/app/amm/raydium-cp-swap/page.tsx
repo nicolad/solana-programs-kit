@@ -1,9 +1,27 @@
 "use client";
 
 import { useState } from "react";
-import { Container, Title, Text, Paper, Stack, Card, Group, Code, Badge, List, Button, TextInput, Alert } from "@mantine/core";
-import { IconArrowsExchange, IconShieldCheck, IconInfoCircle } from "@tabler/icons-react";
-import { WalletRequired } from "@/components/WalletRequired";
+import {
+  Container,
+  Title,
+  Text,
+  Paper,
+  Stack,
+  Card,
+  Group,
+  Code,
+  Badge,
+  List,
+  Button,
+  TextInput,
+  Alert,
+} from "@mantine/core";
+import {
+  IconArrowsExchange,
+  IconShieldCheck,
+  IconInfoCircle,
+} from "@tabler/icons-react";
+import WalletRequired from "@/components/WalletRequired";
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 
 export default function RaydiumCpSwapPage() {
@@ -27,7 +45,10 @@ export default function RaydiumCpSwapPage() {
           }}
         >
           <Group mb="md">
-            <IconArrowsExchange size={40} style={{ color: "rgb(180, 190, 254)" }} />
+            <IconArrowsExchange
+              size={40}
+              style={{ color: "rgb(180, 190, 254)" }}
+            />
             <div>
               <Title order={1}>Raydium CP Swap</Title>
               <Text c="dimmed" size="sm">
@@ -37,12 +58,18 @@ export default function RaydiumCpSwapPage() {
           </Group>
 
           <Text mt="md">
-            A revamped constant product AMM program optimized for straightforward pool deployment
-            with modern features and integrations. Built with Anchor framework for improved developer experience.
+            A revamped constant product AMM program optimized for
+            straightforward pool deployment with modern features and
+            integrations. Built with Anchor framework for improved developer
+            experience.
           </Text>
 
           <Group mt="md" gap="xs">
-            <Badge leftSection={<IconShieldCheck size={14} />} variant="light" color="green">
+            <Badge
+              leftSection={<IconShieldCheck size={14} />}
+              variant="light"
+              color="green"
+            >
               Audited by MadShield
             </Badge>
             <Badge variant="light" color="blue">
@@ -57,15 +84,22 @@ export default function RaydiumCpSwapPage() {
         <Alert icon={<IconInfoCircle />} title="Program Details" color="blue">
           <Stack gap="xs">
             <Text size="sm">
-              <Text component="span" fw={600}>Program ID:</Text>{" "}
+              <Text component="span" fw={600}>
+                Program ID:
+              </Text>{" "}
               <Code>{PROGRAM_ID}</Code>
             </Text>
             <Text size="sm">
-              <Text component="span" fw={600}>Source Code:</Text>{" "}
+              <Text component="span" fw={600}>
+                Source Code:
+              </Text>{" "}
               <Code>programs/raydium-cp-swap</Code>
             </Text>
             <Text size="sm">
-              <Text component="span" fw={600}>Network:</Text> Mainnet-Beta
+              <Text component="span" fw={600}>
+                Network:
+              </Text>{" "}
+              Mainnet-Beta
             </Text>
           </Stack>
         </Alert>
@@ -93,11 +127,10 @@ export default function RaydiumCpSwapPage() {
                 value={poolAddress}
                 onChange={(e) => setPoolAddress(e.target.value)}
               />
-              <Button disabled>
-                Query Pool Info
-              </Button>
+              <Button disabled>Query Pool Info</Button>
               <Text size="xs" c="dimmed">
-                Note: Full integration requires building the Anchor IDL. Run <Code>anchor build</Code> in the program directory.
+                Note: Full integration requires building the Anchor IDL. Run{" "}
+                <Code>anchor build</Code> in the program directory.
               </Text>
             </Stack>
           </Card>
@@ -145,8 +178,9 @@ export default function RaydiumCpSwapPage() {
                 No Openbook Dependency
               </Text>
               <Text size="sm" c="dimmed">
-                Unlike the original Raydium AMM, no Openbook market ID is required for pool creation.
-                This simplifies deployment and reduces setup costs.
+                Unlike the original Raydium AMM, no Openbook market ID is
+                required for pool creation. This simplifies deployment and
+                reduces setup costs.
               </Text>
             </div>
 
@@ -155,8 +189,8 @@ export default function RaydiumCpSwapPage() {
                 Token-2022 Support
               </Text>
               <Text size="sm" c="dimmed">
-                Full support for Token-2022 program extensions including transfer fees, transfer hooks,
-                and other modern token features.
+                Full support for Token-2022 program extensions including
+                transfer fees, transfer hooks, and other modern token features.
               </Text>
             </div>
 
@@ -165,8 +199,8 @@ export default function RaydiumCpSwapPage() {
                 Built-in Price Oracle
               </Text>
               <Text size="sm" c="dimmed">
-                Integrated time-weighted average price (TWAP) oracle for reliable price feeds
-                without external dependencies.
+                Integrated time-weighted average price (TWAP) oracle for
+                reliable price feeds without external dependencies.
               </Text>
             </div>
 
@@ -175,7 +209,8 @@ export default function RaydiumCpSwapPage() {
                 Anchor Optimization
               </Text>
               <Text size="sm" c="dimmed">
-                Rewritten in Anchor framework for better security, maintainability, and developer experience.
+                Rewritten in Anchor framework for better security,
+                maintainability, and developer experience.
               </Text>
             </div>
           </Stack>
@@ -201,8 +236,9 @@ export default function RaydiumCpSwapPage() {
               </Text>
               <Code block>x * y = k</Code>
               <Text size="sm" c="dimmed" mt="xs">
-                Uses the classic constant product market maker formula. When you trade token X for token Y,
-                the product of their reserves remains constant.
+                Uses the classic constant product market maker formula. When you
+                trade token X for token Y, the product of their reserves remains
+                constant.
               </Text>
             </div>
 
@@ -211,8 +247,8 @@ export default function RaydiumCpSwapPage() {
                 Automated Pricing
               </Text>
               <Text size="sm" c="dimmed">
-                Prices are determined algorithmically based on the ratio of tokens in the pool.
-                No manual price setting required.
+                Prices are determined algorithmically based on the ratio of
+                tokens in the pool. No manual price setting required.
               </Text>
             </div>
           </Stack>
@@ -235,7 +271,8 @@ export default function RaydiumCpSwapPage() {
             <List.Item>
               <Text fw={600}>Token Swaps</Text>
               <Text c="dimmed" size="sm">
-                Swap tokens at the current pool price with automatic slippage protection
+                Swap tokens at the current pool price with automatic slippage
+                protection
               </Text>
             </List.Item>
             <List.Item>
@@ -247,7 +284,8 @@ export default function RaydiumCpSwapPage() {
             <List.Item>
               <Text fw={600}>LP Token Rewards</Text>
               <Text c="dimmed" size="sm">
-                Receive LP tokens representing your share of the pool and earned fees
+                Receive LP tokens representing your share of the pool and earned
+                fees
               </Text>
             </List.Item>
             <List.Item>
@@ -273,24 +311,32 @@ export default function RaydiumCpSwapPage() {
           </Title>
           <Stack gap="sm">
             <div>
-              <Text fw={600} size="sm">Audited</Text>
+              <Text fw={600} size="sm">
+                Audited
+              </Text>
               <Text size="sm" c="dimmed">
                 Audited by MadShield in Q1 2024
               </Text>
             </div>
             <div>
-              <Text fw={600} size="sm">Bug Bounty</Text>
+              <Text fw={600} size="sm">
+                Bug Bounty
+              </Text>
               <Text size="sm" c="dimmed">
                 In-scope for Raydium's Immunefi bug bounty program
               </Text>
             </div>
             <div>
-              <Text fw={600} size="sm">Open Source</Text>
+              <Text fw={600} size="sm">
+                Open Source
+              </Text>
               <Text size="sm" c="dimmed">
-                Full source code available at <Code>programs/raydium-cp-swap</Code>
+                Full source code available at{" "}
+                <Code>programs/raydium-cp-swap</Code>
               </Text>
             </div>
-          </Stack>        </Card>
+          </Stack>
+        </Paper>
 
         <Paper
           p="lg"
@@ -306,21 +352,31 @@ export default function RaydiumCpSwapPage() {
           </Title>
           <Stack gap="md">
             <div>
-              <Text fw={600} size="sm" mb="xs">1. Build the Program</Text>
+              <Text fw={600} size="sm" mb="xs">
+                1. Build the Program
+              </Text>
               <Code block>cd programs/raydium-cp-swap && anchor build</Code>
             </div>
             <div>
-              <Text fw={600} size="sm" mb="xs">2. Generate TypeScript Types</Text>
-              <Code block>anchor idl parse -f programs/cp-swap/src/lib.rs -o target/idl/raydium_cp_swap.json</Code>
+              <Text fw={600} size="sm" mb="xs">
+                2. Generate TypeScript Types
+              </Text>
+              <Code block>
+                anchor idl parse -f programs/cp-swap/src/lib.rs -o
+                target/idl/raydium_cp_swap.json
+              </Code>
             </div>
             <div>
-              <Text fw={600} size="sm" mb="xs">3. Use in Your App</Text>
+              <Text fw={600} size="sm" mb="xs">
+                3. Use in Your App
+              </Text>
               <Code block>{`import { Program } from '@coral-xyz/anchor';
 import idl from './idl/raydium_cp_swap.json';
 
 const program = new Program(idl, provider);`}</Code>
             </div>
-          </Stack>        </Paper>
+          </Stack>
+        </Paper>
 
         <Paper
           p="lg"
@@ -336,21 +392,29 @@ const program = new Program(idl, provider);`}</Code>
           </Title>
           <Stack gap="sm">
             <div>
-              <Badge variant="light" mb="xs">New Pools</Badge>
+              <Badge variant="light" mb="xs">
+                New Pools
+              </Badge>
               <Text size="sm" c="dimmed">
-                Best choice for creating new liquidity pools without Openbook market
+                Best choice for creating new liquidity pools without Openbook
+                market
               </Text>
             </div>
             <div>
-              <Badge variant="light" mb="xs">Token-2022</Badge>
+              <Badge variant="light" mb="xs">
+                Token-2022
+              </Badge>
               <Text size="sm" c="dimmed">
                 Required for pools with Token-2022 tokens and their extensions
               </Text>
             </div>
             <div>
-              <Badge variant="light" mb="xs">Simple AMM</Badge>
+              <Badge variant="light" mb="xs">
+                Simple AMM
+              </Badge>
               <Text size="sm" c="dimmed">
-                Ideal for straightforward AMM functionality without order book complexity
+                Ideal for straightforward AMM functionality without order book
+                complexity
               </Text>
             </div>
           </Stack>
