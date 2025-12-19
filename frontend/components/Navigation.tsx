@@ -34,6 +34,12 @@ export function Navigation({ children }: { children: React.ReactNode }) {
       icon: <IconAnchor size={18} />,
       subtitle: "Custom Anchor swap",
     },
+    {
+      href: "/token-swap-amm",
+      label: "Token Swap AMM",
+      icon: <IconScale size={18} />,
+      subtitle: "CPAMM with pools",
+    },
   ];
 
   // Core Solana programs

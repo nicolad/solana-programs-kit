@@ -1,0 +1,515 @@
+{
+  "address": "ESRYmyiiALqFttnDUgMjxqmMzKCytvQsZuQzg9rNQja7",
+  "metadata": {
+    "name": "swap_example",
+    "version": "0.1.0",
+    "spec": "0.1.0"
+  },
+  "instructions": [
+    {
+      "name": "create_amm",
+      "discriminator": [176, 60, 125, 190, 185, 129, 187, 6],
+      "accounts": [
+        {
+          "name": "amm",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "arg",
+                "path": "id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "admin"
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "id",
+          "type": "pubkey"
+        },
+        {
+          "name": "fee",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "create_pool",
+      "discriminator": [233, 146, 209, 142, 207, 104, 64, 188],
+      "accounts": [
+        {
+          "name": "amm",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "amm.id",
+                "account": "Amm"
+              }
+            ]
+          }
+        },
+        {
+          "name": "pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "amm"
+              },
+              {
+                "kind": "account",
+                "path": "mint_a"
+              },
+              {
+                "kind": "account",
+                "path": "mint_b"
+              }
+            ]
+          }
+        },
+        {
+          "name": "pool_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "amm"
+              },
+              {
+                "kind": "account",
+                "path": "mint_a"
+              },
+              {
+                "kind": "account",
+                "path": "mint_b"
+              },
+              {
+                "kind": "const",
+                "value": [97, 117, 116, 104, 111, 114, 105, 116, 121]
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint_liquidity",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "amm"
+              },
+              {
+                "kind": "account",
+                "path": "mint_a"
+              },
+              {
+                "kind": "account",
+                "path": "mint_b"
+              },
+              {
+                "kind": "const",
+                "value": [108, 105, 113, 117, 105, 100, 105, 116, 121]
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint_a"
+        },
+        {
+          "name": "mint_b"
+        },
+        {
+          "name": "pool_account_a",
+          "writable": true
+        },
+        {
+          "name": "pool_account_b",
+          "writable": true
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "deposit_liquidity",
+      "discriminator": [159, 60, 17, 47, 55, 50, 224, 88],
+      "accounts": [
+        {
+          "name": "pool",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "pool.amm",
+                "account": "Pool"
+              },
+              {
+                "kind": "account",
+                "path": "mint_a"
+              },
+              {
+                "kind": "account",
+                "path": "mint_b"
+              }
+            ]
+          }
+        },
+        {
+          "name": "pool_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "pool.amm",
+                "account": "Pool"
+              },
+              {
+                "kind": "account",
+                "path": "mint_a"
+              },
+              {
+                "kind": "account",
+                "path": "mint_b"
+              },
+              {
+                "kind": "const",
+                "value": [97, 117, 116, 104, 111, 114, 105, 116, 121]
+              }
+            ]
+          }
+        },
+        {
+          "name": "depositor",
+          "signer": true
+        },
+        {
+          "name": "mint_liquidity",
+          "writable": true
+        },
+        {
+          "name": "mint_a"
+        },
+        {
+          "name": "mint_b"
+        },
+        {
+          "name": "pool_account_a",
+          "writable": true
+        },
+        {
+          "name": "pool_account_b",
+          "writable": true
+        },
+        {
+          "name": "depositor_account_liquidity",
+          "writable": true
+        },
+        {
+          "name": "depositor_account_a",
+          "writable": true
+        },
+        {
+          "name": "depositor_account_b",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount_a",
+          "type": "u64"
+        },
+        {
+          "name": "amount_b",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "swap_exact_tokens_for_tokens",
+      "discriminator": [43, 4, 237, 30, 234, 32, 47, 164],
+      "accounts": [
+        {
+          "name": "amm"
+        },
+        {
+          "name": "pool",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "pool.amm",
+                "account": "Pool"
+              },
+              {
+                "kind": "account",
+                "path": "mint_a"
+              },
+              {
+                "kind": "account",
+                "path": "mint_b"
+              }
+            ]
+          }
+        },
+        {
+          "name": "pool_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "pool.amm",
+                "account": "Pool"
+              },
+              {
+                "kind": "account",
+                "path": "mint_a"
+              },
+              {
+                "kind": "account",
+                "path": "mint_b"
+              },
+              {
+                "kind": "const",
+                "value": [97, 117, 116, 104, 111, 114, 105, 116, 121]
+              }
+            ]
+          }
+        },
+        {
+          "name": "trader",
+          "signer": true
+        },
+        {
+          "name": "mint_a"
+        },
+        {
+          "name": "mint_b"
+        },
+        {
+          "name": "pool_account_a",
+          "writable": true
+        },
+        {
+          "name": "pool_account_b",
+          "writable": true
+        },
+        {
+          "name": "trader_account_a",
+          "writable": true
+        },
+        {
+          "name": "trader_account_b",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "swap_a",
+          "type": "bool"
+        },
+        {
+          "name": "input_amount",
+          "type": "u64"
+        },
+        {
+          "name": "min_output_amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "withdraw_liquidity",
+      "discriminator": [80, 85, 209, 72, 24, 206, 177, 108],
+      "accounts": [
+        {
+          "name": "amm"
+        },
+        {
+          "name": "pool",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "pool.amm",
+                "account": "Pool"
+              },
+              {
+                "kind": "account",
+                "path": "mint_a"
+              },
+              {
+                "kind": "account",
+                "path": "mint_b"
+              }
+            ]
+          }
+        },
+        {
+          "name": "pool_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "pool.amm",
+                "account": "Pool"
+              },
+              {
+                "kind": "account",
+                "path": "mint_a"
+              },
+              {
+                "kind": "account",
+                "path": "mint_b"
+              },
+              {
+                "kind": "const",
+                "value": [97, 117, 116, 104, 111, 114, 105, 116, 121]
+              }
+            ]
+          }
+        },
+        {
+          "name": "depositor",
+          "signer": true
+        },
+        {
+          "name": "mint_liquidity",
+          "writable": true
+        },
+        {
+          "name": "mint_a"
+        },
+        {
+          "name": "mint_b"
+        },
+        {
+          "name": "pool_account_a",
+          "writable": true
+        },
+        {
+          "name": "pool_account_b",
+          "writable": true
+        },
+        {
+          "name": "depositor_account_liquidity",
+          "writable": true
+        },
+        {
+          "name": "depositor_account_a",
+          "writable": true
+        },
+        {
+          "name": "depositor_account_b",
+          "writable": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Amm",
+      "discriminator": [30, 115, 38, 68, 139, 166, 140, 197]
+    },
+    {
+      "name": "Pool",
+      "discriminator": [241, 154, 109, 4, 17, 177, 109, 188]
+    }
+  ],
+  "types": [
+    {
+      "name": "Amm",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "pubkey"
+          },
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "fee",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Pool",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "amm",
+            "type": "pubkey"
+          },
+          {
+            "name": "mint_a",
+            "type": "pubkey"
+          },
+          {
+            "name": "mint_b",
+            "type": "pubkey"
+          }
+        ]
+      }
+    }
+  ]
+}
