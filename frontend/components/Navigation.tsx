@@ -80,16 +80,16 @@ export function Navigation({ children }: { children: React.ReactNode }) {
       subtitle: "Automated Market Makers",
     },
     {
-      href: "/token-swap",
-      label: "Token Swap CPAMM",
+      href: "/amm/raydium-amm",
+      label: "Raydium AMM",
       icon: <IconArrowsExchange size={18} />,
-      subtitle: "Raydium CPAMM",
+      subtitle: "Original AMM",
     },
     {
-      href: "/amm/raydium-cpmm",
-      label: "Raydium CPMM",
+      href: "/amm/raydium-cp-swap",
+      label: "Raydium CP Swap",
       icon: <IconArrowsExchange size={18} />,
-      subtitle: "Constant product",
+      subtitle: "Optimized CPAMM",
     },
     {
       href: "/amm/stableswap",
