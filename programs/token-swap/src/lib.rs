@@ -41,4 +41,13 @@ pub mod swap_example {
     ) -> Result<()> {
         instructions::swap_exact_tokens_for_tokens(ctx, swap_a, input_amount, min_output_amount)
     }
+
+    pub fn jupiter_swap(
+        ctx: Context<JupiterSwap>,
+        amount_in: u64,
+        minimum_amount_out: u64,
+        platform_fee_bps: u8,
+    ) -> Result<()> {
+        instructions::jupiter_swap(ctx, amount_in, minimum_amount_out, platform_fee_bps)
+    }
 }
