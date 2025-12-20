@@ -10,7 +10,7 @@ export function useSwapProgram(): Program<SwapProgram> | null {
   const wallet = useAnchorWallet();
   const [program, setProgram] = useState<Program<SwapProgram> | null>(null);
 
-  const idl = idlFile as Idl;
+  const idl = idlFile as unknown as Idl;
 
   useEffect(() => {
     if (wallet) {

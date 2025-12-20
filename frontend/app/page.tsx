@@ -1,142 +1,204 @@
 "use client";
 
-import { Container, Stack, Title, Text, Card, SimpleGrid } from "@mantine/core";
-import Link from "next/link";
-import {
-  IconShieldCheck,
-  IconCoins,
-  IconBolt,
-  IconTable,
-  IconReceipt,
-  IconCpu,
-  IconWallet,
-} from "@tabler/icons-react";
+import { useState } from "react";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { PublicKey } from "@solana/web3.js";
+import { Container, Title, Text, Stack, Grid, Paper, Group, Badge, Tabs } from "@mantine/core";
+import { IconArrowsExchange, IconDroplet, IconChartLine } from "@tabler/icons-react";
+import { WalletRequired } from "@/components/WalletRequired";
+import { SwapForm } from "@/components/token-swap/SwapForm";
+import { DepositLiquidity } from "@/components/token-swap/DepositLiquidity";
+import { WithdrawLiquidity } from "@/components/token-swap/WithdrawLiquidity";
+
+// Mock data - in production, fetch from on-chain accounts
+const MOCK_AMM_ID = new PublicKey("11111111111111111111111111111111");
+const MOCK_TOKENS = [
+  {
+    mint: new PublicKey("So11111111111111111111111111111111111111112"),
+    symbol: "SOL",
+    name: "Solana",
+    decimals: 9,
+  },
+  {
+    mint: new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"),
+    symbol: "USDC",
+    name: "USD Coin",
+    decimals: 6,
+  },
+];
 
 export default function Home() {
-  const corePrograms = [
-    {
-      id: "token",
-      name: "Token Program",
-      description: "SPL Token - Create and manage fungible tokens",
-      icon: <IconCoins size={24} />,
-      href: "/core/token",
-    },
-    {
-      id: "token-2022",
-      name: "Token-2022",
-      description: "Token Extensions - Advanced token features",
-      icon: <IconShieldCheck size={24} />,
-      href: "/core/token-2022",
-    },
-    {
-      id: "associated-token",
-      name: "Associated Token Account",
-      description: "ATA - Deterministic token account addresses",
-      icon: <IconWallet size={24} />,
-      href: "/core/associated-token",
-    },
-    {
-      id: "system",
-      name: "System Program",
-      description: "SOL transfers and account creation",
-      icon: <IconBolt size={24} />,
-      href: "/core/system",
-    },
-    {
-      id: "memo",
-      name: "Memo Program",
-      description: "On-chain notes and messages",
-      icon: <IconReceipt size={24} />,
-      href: "/core/memo",
-    },
-    {
-      id: "compute-budget",
-      name: "Compute Budget",
-      description: "Set compute units and priority fees",
-      icon: <IconCpu size={24} />,
-      href: "/core/compute-budget",
-    },
-    {
-      id: "address-lookup",
-      name: "Address Lookup Tables",
-      description: "Optimize transaction size with lookup tables",
-      icon: <IconTable size={24} />,
-      href: "/core/address-lookup",
-    },
-  ];
+  const wallet = useWallet();
+  const [activeTab, setActiveTab] = useState<string | null>("swap");
+  
+  const poolBalances = {
+    [MOCK_TOKENS[0].mint.toString()]: 1000,
+    [MOCK_TOKENS[1].mint.toString()]: 50000,
+  };
+
+  const fee = 30; // 0.3% in basis points
+  const lpBalance = 0;
 
   return (
     <Container size="lg" py="xl">
       <Stack gap="xl">
-        <div style={{ textAlign: "center" }}>
-          <Title
-            order={1}
-            mb="xs"
-            style={{
-              background:
-                "linear-gradient(135deg, rgb(203, 166, 247), rgb(148, 187, 233))",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
-            Core Solana Programs
-          </Title>
+        <div>
+          <Group gap="sm" mb="xs">
+            <Title order={1}>Token Swap AMM</Title>
+            <Badge size="lg" variant="light" color="blue">Constant Product</Badge>
+          </Group>
           <Text c="dimmed" size="lg">
-            Interact with essential Solana blockchain programs
+            Trade tokens using the constant product formula (x × y = k)
           </Text>
         </div>
 
-        <div>
-          <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="lg">
-            {corePrograms.map((program) => (
-              <Link
-                key={program.id}
-                href={program.href}
-                style={{ textDecoration: "none" }}
-              >
-                <Card
-                  padding="xl"
-                  radius="md"
-                  withBorder
-                  style={{
-                    backgroundColor: "rgba(30, 30, 46, 0.7)",
-                    backdropFilter: "blur(12px)",
-                    borderColor: "rgba(88, 91, 112, 0.3)",
-                    boxShadow: "0 25px 50px -12px rgba(180, 190, 254, 0.15)",
-                    cursor: "pointer",
-                    transition: "all 0.3s ease",
-                    height: "100%",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "translateY(-4px)";
-                    e.currentTarget.style.boxShadow =
-                      "0 25px 50px -12px rgba(180, 190, 254, 0.25)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.boxShadow =
-                      "0 25px 50px -12px rgba(180, 190, 254, 0.15)";
-                  }}
-                >
-                  <Stack gap="md">
-                    <div style={{ color: "rgb(203, 166, 247)" }}>
-                      {program.icon}
-                    </div>
-                    <div>
-                      <Title order={3} mb="xs" size="h4">
-                        {program.name}
-                      </Title>
-                      <Text c="dimmed" size="sm">
-                        {program.description}
-                      </Text>
-                    </div>
+        {!wallet.connected ? (
+          <WalletRequired />
+        ) : (
+          <>
+            <Paper shadow="xs" p="lg" radius="md" withBorder>
+              <Grid>
+                <Grid.Col span={{ base: 12, sm: 4 }}>
+                  <Stack gap="xs">
+                    <Group gap="xs">
+                      <IconChartLine size={18} />
+                      <Text size="sm" c="dimmed">Total Value Locked</Text>
+                    </Group>
+                    <Text size="xl" fw={700}>$100,000</Text>
                   </Stack>
-                </Card>
-              </Link>
-            ))}
-          </SimpleGrid>
-        </div>
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, sm: 4 }}>
+                  <Stack gap="xs">
+                    <Group gap="xs">
+                      <IconArrowsExchange size={18} />
+                      <Text size="sm" c="dimmed">24h Volume</Text>
+                    </Group>
+                    <Text size="xl" fw={700}>$25,000</Text>
+                  </Stack>
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, sm: 4 }}>
+                  <Stack gap="xs">
+                    <Group gap="xs">
+                      <IconDroplet size={18} />
+                      <Text size="sm" c="dimmed">LP Fee</Text>
+                    </Group>
+                    <Text size="xl" fw={700}>{fee / 100}%</Text>
+                  </Stack>
+                </Grid.Col>
+              </Grid>
+            </Paper>
+
+            <Tabs value={activeTab} onChange={setActiveTab}>
+              <Tabs.List grow>
+                <Tabs.Tab value="swap" leftSection={<IconArrowsExchange size={16} />}>Swap</Tabs.Tab>
+                <Tabs.Tab value="add" leftSection={<IconDroplet size={16} />}>Add Liquidity</Tabs.Tab>
+                <Tabs.Tab value="remove" leftSection={<IconDroplet size={16} />}>Remove Liquidity</Tabs.Tab>
+              </Tabs.List>
+
+              <Tabs.Panel value="swap" pt="xl">
+                <Grid>
+                  <Grid.Col span={{ base: 12, md: 6 }}>
+                    <SwapForm
+                      ammId={MOCK_AMM_ID}
+                      tokens={MOCK_TOKENS}
+                      poolBalances={poolBalances}
+                      fee={fee}
+                    />
+                  </Grid.Col>
+                  <Grid.Col span={{ base: 12, md: 6 }}>
+                    <Paper shadow="xs" p="lg" radius="md" withBorder>
+                      <Stack gap="md">
+                        <Text size="lg" fw={700}>How It Works</Text>
+                        <Text size="sm" c="dimmed">
+                          This AMM uses the <strong>Constant Product Formula</strong>:
+                        </Text>
+                        <Paper p="md" bg="dark.6" radius="md">
+                          <Text size="sm" ff="monospace">
+                            output = (input × poolB) / (poolA + input)
+                          </Text>
+                        </Paper>
+                        <Stack gap="xs">
+                          <Text size="sm">• {fee / 100}% fee on each trade</Text>
+                          <Text size="sm">• Fees go to liquidity providers</Text>
+                          <Text size="sm">• Price impact grows with trade size</Text>
+                        </Stack>
+                      </Stack>
+                    </Paper>
+                  </Grid.Col>
+                </Grid>
+              </Tabs.Panel>
+
+              <Tabs.Panel value="add" pt="xl">
+                <Grid>
+                  <Grid.Col span={{ base: 12, md: 6 }}>
+                    <DepositLiquidity
+                      ammId={MOCK_AMM_ID}
+                      tokenA={MOCK_TOKENS[0]}
+                      tokenB={MOCK_TOKENS[1]}
+                      poolBalances={{
+                        a: poolBalances[MOCK_TOKENS[0].mint.toString()],
+                        b: poolBalances[MOCK_TOKENS[1].mint.toString()],
+                      }}
+                    />
+                  </Grid.Col>
+                  <Grid.Col span={{ base: 12, md: 6 }}>
+                    <Paper shadow="xs" p="lg" radius="md" withBorder>
+                      <Stack gap="md">
+                        <Text size="lg" fw={700}>Earn Trading Fees</Text>
+                        <Text size="sm" c="dimmed">
+                          Earn {fee / 100}% of trading fees proportional to your pool share
+                        </Text>
+                        <Paper p="md" bg="dark.6" radius="md">
+                          <Stack gap="xs">
+                            <Group justify="space-between">
+                              <Text size="sm">Pool Share</Text>
+                              <Text size="sm" fw={600}>0%</Text>
+                            </Group>
+                            <Group justify="space-between">
+                              <Text size="sm">Expected APY</Text>
+                              <Text size="sm" fw={600} c="green">~12%</Text>
+                            </Group>
+                          </Stack>
+                        </Paper>
+                      </Stack>
+                    </Paper>
+                  </Grid.Col>
+                </Grid>
+              </Tabs.Panel>
+
+              <Tabs.Panel value="remove" pt="xl">
+                <Grid>
+                  <Grid.Col span={{ base: 12, md: 6 }}>
+                    <WithdrawLiquidity
+                      ammId={MOCK_AMM_ID}
+                      tokenA={MOCK_TOKENS[0]}
+                      tokenB={MOCK_TOKENS[1]}
+                      lpBalance={lpBalance}
+                      lpDecimals={6}
+                    />
+                  </Grid.Col>
+                  <Grid.Col span={{ base: 12, md: 6 }}>
+                    <Paper shadow="xs" p="lg" radius="md" withBorder>
+                      <Stack gap="md">
+                        <Text size="lg" fw={700}>Your Position</Text>
+                        {lpBalance === 0 ? (
+                          <Text size="sm" c="dimmed">No liquidity provided yet</Text>
+                        ) : (
+                          <Stack gap="xs">
+                            <Group justify="space-between">
+                              <Text size="sm">LP Tokens</Text>
+                              <Text size="sm" fw={600}>{lpBalance}</Text>
+                            </Group>
+                          </Stack>
+                        )}
+                      </Stack>
+                    </Paper>
+                  </Grid.Col>
+                </Grid>
+              </Tabs.Panel>
+            </Tabs>
+          </>
+        )}
       </Stack>
     </Container>
   );

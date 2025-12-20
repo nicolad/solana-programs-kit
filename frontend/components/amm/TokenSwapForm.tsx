@@ -78,15 +78,23 @@ export function TokenSwapForm({
           true
         );
 
-        const [accountAInfo, accountBInfo, ammData] = await Promise.all([
+        const [accountAInfo, accountBInfo] = await Promise.all([
           getAccount(connection, poolAccountA),
           getAccount(connection, poolAccountB),
-          program.account.amm.fetch(ammPda),
         ]);
+
+        // Fetch AMM account data
+        const ammAccountInfo = await connection.getAccountInfo(ammPda);
+        let feeValue = 30; // default fee
+        if (ammAccountInfo) {
+          // Parse the AMM account (skip 8 byte discriminator, then 32+32 bytes for pubkeys, then 2 bytes for fee)
+          const feeBuffer = ammAccountInfo.data.slice(72, 74);
+          feeValue = feeBuffer.readUInt16LE(0);
+        }
 
         setPoolReserveA(Number(accountAInfo.amount));
         setPoolReserveB(Number(accountBInfo.amount));
-        setAmmFee(ammData.fee as number);
+        setAmmFee(feeValue);
       } catch (error) {
         console.error("Error fetching pool data:", error);
       }
@@ -157,7 +165,7 @@ export function TokenSwapForm({
 
       const minOutputAmount = Math.floor(outputAmount * (1 - slippage / 100));
 
-      const tx = await program.methods
+      const tx = await (program as any).methods
         .swapExactTokensForTokens(
           swapA,
           new BN(inputAmount),

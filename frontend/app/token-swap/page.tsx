@@ -1,218 +1,204 @@
 "use client";
 
-import {
-  Container,
-  Title,
-  Text,
-  Paper,
-  Stack,
-  Card,
-  Group,
-  Code,
-  Badge,
-} from "@mantine/core";
-import { IconArrowsExchange } from "@tabler/icons-react";
+import { useState } from "react";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { PublicKey } from "@solana/web3.js";
+import { Container, Title, Text, Stack, Grid, Paper, Group, Badge, Tabs } from "@mantine/core";
+import { IconArrowsExchange, IconDroplet, IconChartLine } from "@tabler/icons-react";
+import { WalletRequired } from "@/components/WalletRequired";
+import { SwapForm } from "@/components/token-swap/SwapForm";
+import { DepositLiquidity } from "@/components/token-swap/DepositLiquidity";
+import { WithdrawLiquidity } from "@/components/token-swap/WithdrawLiquidity";
+
+// Mock data - in production, fetch from on-chain accounts
+const MOCK_AMM_ID = new PublicKey("11111111111111111111111111111111");
+const MOCK_TOKENS = [
+  {
+    mint: new PublicKey("So11111111111111111111111111111111111111112"),
+    symbol: "SOL",
+    name: "Solana",
+    decimals: 9,
+  },
+  {
+    mint: new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"),
+    symbol: "USDC",
+    name: "USD Coin",
+    decimals: 6,
+  },
+];
 
 export default function TokenSwapPage() {
+  const wallet = useWallet();
+  const [activeTab, setActiveTab] = useState<string | null>("swap");
+  
+  const poolBalances = {
+    [MOCK_TOKENS[0].mint.toString()]: 1000,
+    [MOCK_TOKENS[1].mint.toString()]: 50000,
+  };
+
+  const fee = 30; // 0.3% in basis points
+  const lpBalance = 0;
+
   return (
     <Container size="lg" py="xl">
       <Stack gap="xl">
-        <Paper
-          p="xl"
-          radius="md"
-          withBorder
-          style={{
-            backgroundColor: "rgba(30, 30, 46, 0.7)",
-            backdropFilter: "blur(12px)",
-            borderColor: "rgba(88, 91, 112, 0.3)",
-          }}
-        >
-          <Group mb="md">
-            <IconArrowsExchange
-              size={40}
-              style={{ color: "rgb(180, 190, 254)" }}
-            />
-            <div>
-              <Title order={1}>Token Swap CPAMM</Title>
-              <Text c="dimmed" size="sm">
-                Constant Product Automated Market Maker
-              </Text>
-            </div>
+        <div>
+          <Group gap="sm" mb="xs">
+            <Title order={1}>Token Swap AMM</Title>
+            <Badge size="lg" variant="light" color="blue">Constant Product</Badge>
           </Group>
-
-          <Text mt="md">
-            A constant product market maker (CPAMM) implementation using the
-            classic x * y = k formula. This is similar to Uniswap V2 and
-            Raydium's CPAMM pools.
+          <Text c="dimmed" size="lg">
+            Trade tokens using the constant product formula (x × y = k)
           </Text>
-        </Paper>
+        </div>
 
-        <Card
-          shadow="sm"
-          padding="lg"
-          radius="md"
-          withBorder
-          style={{
-            backgroundColor: "rgba(30, 30, 46, 0.5)",
-            borderColor: "rgba(88, 91, 112, 0.3)",
-          }}
-        >
-          <Title order={3} mb="md">
-            How It Works
-          </Title>
-          <Stack gap="sm">
-            <div>
-              <Text fw={600} size="sm" mb="xs">
-                Constant Product Formula
-              </Text>
-              <Code block>x * y = k</Code>
-              <Text size="sm" c="dimmed" mt="xs">
-                Where x and y are the reserves of two tokens, and k is a
-                constant. When you trade one token for another, the product of
-                the reserves must remain constant.
-              </Text>
-            </div>
+        {!wallet.connected ? (
+          <WalletRequired />
+        ) : (
+          <>
+            <Paper shadow="xs" p="lg" radius="md" withBorder>
+              <Grid>
+                <Grid.Col span={{ base: 12, sm: 4 }}>
+                  <Stack gap="xs">
+                    <Group gap="xs">
+                      <IconChartLine size={18} />
+                      <Text size="sm" c="dimmed">Total Value Locked</Text>
+                    </Group>
+                    <Text size="xl" fw={700}>$100,000</Text>
+                  </Stack>
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, sm: 4 }}>
+                  <Stack gap="xs">
+                    <Group gap="xs">
+                      <IconArrowsExchange size={18} />
+                      <Text size="sm" c="dimmed">24h Volume</Text>
+                    </Group>
+                    <Text size="xl" fw={700}>$25,000</Text>
+                  </Stack>
+                </Grid.Col>
+                <Grid.Col span={{ base: 12, sm: 4 }}>
+                  <Stack gap="xs">
+                    <Group gap="xs">
+                      <IconDroplet size={18} />
+                      <Text size="sm" c="dimmed">LP Fee</Text>
+                    </Group>
+                    <Text size="xl" fw={700}>{fee / 100}%</Text>
+                  </Stack>
+                </Grid.Col>
+              </Grid>
+            </Paper>
 
-            <div>
-              <Text fw={600} size="sm" mb="xs">
-                Price Calculation
-              </Text>
-              <Text size="sm" c="dimmed">
-                The price of a token is determined by the ratio of the reserves.
-                As you buy a token, its price increases because you're removing
-                it from the pool and adding the other token.
-              </Text>
-            </div>
+            <Tabs value={activeTab} onChange={setActiveTab}>
+              <Tabs.List grow>
+                <Tabs.Tab value="swap" leftSection={<IconArrowsExchange size={16} />}>Swap</Tabs.Tab>
+                <Tabs.Tab value="add" leftSection={<IconDroplet size={16} />}>Add Liquidity</Tabs.Tab>
+                <Tabs.Tab value="remove" leftSection={<IconDroplet size={16} />}>Remove Liquidity</Tabs.Tab>
+              </Tabs.List>
 
-            <div>
-              <Text fw={600} size="sm" mb="xs">
-                Slippage
-              </Text>
-              <Text size="sm" c="dimmed">
-                Larger trades cause more price impact (slippage) because they
-                change the reserve ratio more significantly. This protects
-                liquidity providers from being drained by large orders.
-              </Text>
-            </div>
-          </Stack>
-        </Card>
+              <Tabs.Panel value="swap" pt="xl">
+                <Grid>
+                  <Grid.Col span={{ base: 12, md: 6 }}>
+                    <SwapForm
+                      ammId={MOCK_AMM_ID}
+                      tokens={MOCK_TOKENS}
+                      poolBalances={poolBalances}
+                      fee={fee}
+                    />
+                  </Grid.Col>
+                  <Grid.Col span={{ base: 12, md: 6 }}>
+                    <Paper shadow="xs" p="lg" radius="md" withBorder>
+                      <Stack gap="md">
+                        <Text size="lg" fw={700}>How It Works</Text>
+                        <Text size="sm" c="dimmed">
+                          This AMM uses the <strong>Constant Product Formula</strong>:
+                        </Text>
+                        <Paper p="md" bg="dark.6" radius="md">
+                          <Text size="sm" ff="monospace">
+                            output = (input × poolB) / (poolA + input)
+                          </Text>
+                        </Paper>
+                        <Stack gap="xs">
+                          <Text size="sm">• {fee / 100}% fee on each trade</Text>
+                          <Text size="sm">• Fees go to liquidity providers</Text>
+                          <Text size="sm">• Price impact grows with trade size</Text>
+                        </Stack>
+                      </Stack>
+                    </Paper>
+                  </Grid.Col>
+                </Grid>
+              </Tabs.Panel>
 
-        <Card
-          shadow="sm"
-          padding="lg"
-          radius="md"
-          withBorder
-          style={{
-            backgroundColor: "rgba(30, 30, 46, 0.5)",
-            borderColor: "rgba(88, 91, 112, 0.3)",
-          }}
-        >
-          <Title order={3} mb="md">
-            Key Features
-          </Title>
-          <Stack gap="md">
-            <Group align="flex-start">
-              <Badge variant="light" size="lg">
-                Swap
-              </Badge>
-              <Text size="sm" style={{ flex: 1 }}>
-                Trade one token for another at the current pool price
-              </Text>
-            </Group>
+              <Tabs.Panel value="add" pt="xl">
+                <Grid>
+                  <Grid.Col span={{ base: 12, md: 6 }}>
+                    <DepositLiquidity
+                      ammId={MOCK_AMM_ID}
+                      tokenA={MOCK_TOKENS[0]}
+                      tokenB={MOCK_TOKENS[1]}
+                      poolBalances={{
+                        a: poolBalances[MOCK_TOKENS[0].mint.toString()],
+                        b: poolBalances[MOCK_TOKENS[1].mint.toString()],
+                      }}
+                    />
+                  </Grid.Col>
+                  <Grid.Col span={{ base: 12, md: 6 }}>
+                    <Paper shadow="xs" p="lg" radius="md" withBorder>
+                      <Stack gap="md">
+                        <Text size="lg" fw={700}>Earn Trading Fees</Text>
+                        <Text size="sm" c="dimmed">
+                          Earn {fee / 100}% of trading fees proportional to your pool share
+                        </Text>
+                        <Paper p="md" bg="dark.6" radius="md">
+                          <Stack gap="xs">
+                            <Group justify="space-between">
+                              <Text size="sm">Pool Share</Text>
+                              <Text size="sm" fw={600}>0%</Text>
+                            </Group>
+                            <Group justify="space-between">
+                              <Text size="sm">Expected APY</Text>
+                              <Text size="sm" fw={600} c="green">~12%</Text>
+                            </Group>
+                          </Stack>
+                        </Paper>
+                      </Stack>
+                    </Paper>
+                  </Grid.Col>
+                </Grid>
+              </Tabs.Panel>
 
-            <Group align="flex-start">
-              <Badge variant="light" size="lg">
-                Add Liquidity
-              </Badge>
-              <Text size="sm" style={{ flex: 1 }}>
-                Deposit both tokens in the current ratio to earn trading fees
-              </Text>
-            </Group>
-
-            <Group align="flex-start">
-              <Badge variant="light" size="lg">
-                Remove Liquidity
-              </Badge>
-              <Text size="sm" style={{ flex: 1 }}>
-                Withdraw your share of the pool plus accumulated fees
-              </Text>
-            </Group>
-
-            <Group align="flex-start">
-              <Badge variant="light" size="lg">
-                LP Tokens
-              </Badge>
-              <Text size="sm" style={{ flex: 1 }}>
-                Receive liquidity provider tokens representing your pool share
-              </Text>
-            </Group>
-          </Stack>
-        </Card>
-
-        <Paper
-          p="lg"
-          radius="md"
-          withBorder
-          style={{
-            backgroundColor: "rgba(30, 30, 46, 0.5)",
-            borderColor: "rgba(88, 91, 112, 0.3)",
-          }}
-        >
-          <Title order={3} mb="md">
-            Example Calculation
-          </Title>
-          <Stack gap="sm">
-            <Text size="sm">
-              <Text component="span" fw={600}>
-                Initial Pool:
-              </Text>{" "}
-              100 SOL × 10,000 USDC = 1,000,000 (k)
-            </Text>
-            <Text size="sm">
-              <Text component="span" fw={600}>
-                Price:
-              </Text>{" "}
-              1 SOL = 100 USDC
-            </Text>
-            <Text size="sm" c="dimmed" mt="xs">
-              If you swap 1 SOL, you receive approximately 99 USDC (accounting
-              for slippage). The new pool state becomes: 101 SOL × 9,901 USDC ≈
-              1,000,000
-            </Text>
-          </Stack>
-        </Paper>
-
-        <Paper
-          p="lg"
-          radius="md"
-          withBorder
-          style={{
-            backgroundColor: "rgba(30, 30, 46, 0.5)",
-            borderColor: "rgba(88, 91, 112, 0.3)",
-          }}
-        >
-          <Title order={3} mb="md">
-            Implementations
-          </Title>
-          <Stack gap="sm">
-            <div>
-              <Text fw={600} size="sm">
-                Raydium CPAMM
-              </Text>
-              <Text size="sm" c="dimmed">
-                Raydium's constant product AMM implementation on Solana
-              </Text>
-            </div>
-            <div>
-              <Text fw={600} size="sm">
-                Token Swap Program
-              </Text>
-              <Text size="sm" c="dimmed">
-                Classic CPAMM implementation for Solana tokens
-              </Text>
-            </div>
-          </Stack>
-        </Paper>
+              <Tabs.Panel value="remove" pt="xl">
+                <Grid>
+                  <Grid.Col span={{ base: 12, md: 6 }}>
+                    <WithdrawLiquidity
+                      ammId={MOCK_AMM_ID}
+                      tokenA={MOCK_TOKENS[0]}
+                      tokenB={MOCK_TOKENS[1]}
+                      lpBalance={lpBalance}
+                      lpDecimals={6}
+                    />
+                  </Grid.Col>
+                  <Grid.Col span={{ base: 12, md: 6 }}>
+                    <Paper shadow="xs" p="lg" radius="md" withBorder>
+                      <Stack gap="md">
+                        <Text size="lg" fw={700}>Your Position</Text>
+                        {lpBalance === 0 ? (
+                          <Text size="sm" c="dimmed">No liquidity provided yet</Text>
+                        ) : (
+                          <Stack gap="xs">
+                            <Group justify="space-between">
+                              <Text size="sm">LP Tokens</Text>
+                              <Text size="sm" fw={600}>{lpBalance}</Text>
+                            </Group>
+                          </Stack>
+                        )}
+                      </Stack>
+                    </Paper>
+                  </Grid.Col>
+                </Grid>
+              </Tabs.Panel>
+            </Tabs>
+          </>
+        )}
       </Stack>
     </Container>
   );

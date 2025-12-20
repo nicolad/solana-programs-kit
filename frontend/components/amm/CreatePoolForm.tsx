@@ -10,13 +10,13 @@ import {
 } from "@solana/spl-token";
 import { Button, TextInput, Card, Stack, Title, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { useTokenSwapProgram } from "@/lib/useTokenSwapProgram";
+import { useTokenSwapProgram } from "@/hooks/useTokenSwapProgram";
 import {
   getAmmPda,
   getPoolPda,
   getPoolAuthorityPda,
   getLiquidityMintPda,
-} from "@/lib/token-swap-utils";
+} from "@/lib/token-swap-constants";
 
 interface CreatePoolFormProps {
   ammId: PublicKey;
@@ -90,7 +90,7 @@ export function CreatePoolForm({ ammId }: CreatePoolFormProps) {
         true
       );
 
-      const tx = await program.methods
+      const tx = await (program as any).methods
         .createPool()
         .accounts({
           amm: ammPda,

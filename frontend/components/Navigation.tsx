@@ -26,21 +26,13 @@ import { WalletBalance } from "./WalletBalance";
 export function Navigation({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
-  // Custom programs
-  const customPrograms = [
-    {
-      href: "/swap-program",
-      label: "Swap Program",
-      icon: <IconAnchor size={18} />,
-      subtitle: "Custom Anchor swap",
-    },
-    {
-      href: "/token-swap-amm",
-      label: "Token Swap AMM",
-      icon: <IconScale size={18} />,
-      subtitle: "CPAMM with pools",
-    },
-  ];
+  // Featured: Token Swap AMM
+  const featuredProgram = {
+    href: "/",
+    label: "Token Swap AMM",
+    icon: <IconScale size={18} />,
+    subtitle: "Constant Product AMM",
+  };
 
   // Core Solana programs
   const corePrograms = [
@@ -233,20 +225,26 @@ export function Navigation({ children }: { children: React.ReactNode }) {
       <AppShell.Navbar p="md" style={{ overflowY: "auto" }}>
         <Stack gap="xs">
           <AppShell.Section>
-            <Text size="xs" fw={700} c="dimmed" mb="xs">
-              CUSTOM PROGRAMS
+            <Text size="xs" fw={700} c="blue" mb="xs">
+              ⭐ FEATURED AMM
             </Text>
-            {customPrograms.map((program) => (
-              <NavLink
-                key={program.href}
-                component={Link}
-                href={program.href}
-                label={program.label}
-                description={program.subtitle}
-                leftSection={program.icon}
-                active={pathname === program.href}
-              />
-            ))}
+            <NavLink
+              component={Link}
+              href={featuredProgram.href}
+              label={featuredProgram.label}
+              description={featuredProgram.subtitle}
+              leftSection={featuredProgram.icon}
+              active={pathname === featuredProgram.href}
+              styles={{
+                root: {
+                  borderRadius: "8px",
+                  "&[dataActive]": {
+                    background: "rgba(74, 144, 226, 0.15)",
+                    borderLeft: "3px solid rgb(74, 144, 226)",
+                  },
+                },
+              }}
+            />
           </AppShell.Section>
 
           <Divider my="sm" />

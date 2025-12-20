@@ -44,7 +44,7 @@ export function CreateAMMForm() {
     try {
       const ammId = Keypair.generate().publicKey;
 
-      const tx = await program.methods
+      const tx = await (program as any).methods
         .createAmm(ammId, fee)
         .accounts({
           admin: wallet.publicKey,

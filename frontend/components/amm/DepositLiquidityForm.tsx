@@ -1,101 +1,164 @@
 "use client";
 
-import { useState, useEffect } from 'react'
-import { useWallet, useConnection } from '@solana/wallet-adapter-react'
-import { PublicKey, SystemProgram } from '@solana/web3.js'
-import { TOKEN_PROGRAM_ID, getAssociatedTokenAddressSync, getAccount } from '@solana/spl-token'
-import { Button, Card, Stack, Title, Text, NumberInput, Group } from '@mantine/core'
-import { notifications } from '@mantine/notifications'
-import { useTokenSwapProgram } from '@/lib/useTokenSwapProgram'
-import { getAmmPda, getPoolPda, getPoolAuthorityPda, getLiquidityMintPda, calculateLiquidityAmount } from '@/lib/token-swap-utils'
-import { BN } from '@coral-xyz/anchor'
+import { useState, useEffect } from "react";
+import { useWallet, useConnection } from "@solana/wallet-adapter-react";
+import { PublicKey, SystemProgram } from "@solana/web3.js";
+import {
+  TOKEN_PROGRAM_ID,
+  getAssociatedTokenAddressSync,
+  getAccount,
+} from "@solana/spl-token";
+import {
+  Button,
+  Card,
+  Stack,
+  Title,
+  Text,
+  NumberInput,
+  Group,
+} from "@mantine/core";
+import { notifications } from "@mantine/notifications";
+import { useTokenSwapProgram } from "@/lib/useTokenSwapProgram";
+import {
+  getAmmPda,
+  getPoolPda,
+  getPoolAuthorityPda,
+  getLiquidityMintPda,
+  calculateLiquidityAmount,
+} from "@/lib/token-swap-utils";
+import { BN } from "@coral-xyz/anchor";
 
 interface DepositLiquidityFormProps {
-  ammId: PublicKey
-  poolAddress: PublicKey
-  mintA: PublicKey
-  mintB: PublicKey
+  ammId: PublicKey;
+  poolAddress: PublicKey;
+  mintA: PublicKey;
+  mintB: PublicKey;
 }
 
-export function DepositLiquidityForm({ ammId, poolAddress, mintA, mintB }: DepositLiquidityFormProps) {
-  const wallet = useWallet()
-  const { connection } = useConnection()
-  const program = useTokenSwapProgram()
-  const [amountA, setAmountA] = useState<number>(0)
-  const [amountB, setAmountB] = useState<number>(0)
-  const [estimatedLP, setEstimatedLP] = useState<number>(0)
-  const [depositing, setDepositing] = useState(false)
-  const [poolReserveA, setPoolReserveA] = useState<number>(0)
-  const [poolReserveB, setPoolReserveB] = useState<number>(0)
+export function DepositLiquidityForm({
+  ammId,
+  poolAddress,
+  mintA,
+  mintB,
+}: DepositLiquidityFormProps) {
+  const wallet = useWallet();
+  const { connection } = useConnection();
+  const program = useTokenSwapProgram();
+  const [amountA, setAmountA] = useState<number>(0);
+  const [amountB, setAmountB] = useState<number>(0);
+  const [estimatedLP, setEstimatedLP] = useState<number>(0);
+  const [depositing, setDepositing] = useState(false);
+  const [poolReserveA, setPoolReserveA] = useState<number>(0);
+  const [poolReserveB, setPoolReserveB] = useState<number>(0);
 
   useEffect(() => {
     const fetchPoolData = async () => {
-      if (!program) return
+      if (!program) return;
 
       try {
-        const [ammPda] = getAmmPda(program.programId, ammId)
-        const [poolAuthority] = getPoolAuthorityPda(program.programId, ammPda, mintA, mintB)
+        const [ammPda] = getAmmPda(program.programId, ammId);
+        const [poolAuthority] = getPoolAuthorityPda(
+          program.programId,
+          ammPda,
+          mintA,
+          mintB
+        );
 
-        const poolAccountA = getAssociatedTokenAddressSync(mintA, poolAuthority, true)
-        const poolAccountB = getAssociatedTokenAddressSync(mintB, poolAuthority, true)
+        const poolAccountA = getAssociatedTokenAddressSync(
+          mintA,
+          poolAuthority,
+          true
+        );
+        const poolAccountB = getAssociatedTokenAddressSync(
+          mintB,
+          poolAuthority,
+          true
+        );
 
         const [accountAInfo, accountBInfo] = await Promise.all([
           getAccount(connection, poolAccountA),
           getAccount(connection, poolAccountB),
-        ])
+        ]);
 
-        setPoolReserveA(Number(accountAInfo.amount))
-        setPoolReserveB(Number(accountBInfo.amount))
+        setPoolReserveA(Number(accountAInfo.amount));
+        setPoolReserveB(Number(accountBInfo.amount));
       } catch (error) {
-        console.error('Error fetching pool data:', error)
+        console.error("Error fetching pool data:", error);
       }
-    }
+    };
 
-    fetchPoolData()
-  }, [program, ammId, mintA, mintB, connection])
+    fetchPoolData();
+  }, [program, ammId, mintA, mintB, connection]);
 
   useEffect(() => {
     if (amountA > 0 && amountB > 0) {
-      const lpAmount = calculateLiquidityAmount(amountA, amountB)
-      setEstimatedLP(lpAmount)
+      const lpAmount = calculateLiquidityAmount(amountA, amountB);
+      setEstimatedLP(lpAmount);
     } else {
-      setEstimatedLP(0)
+      setEstimatedLP(0);
     }
-  }, [amountA, amountB])
+  }, [amountA, amountB]);
 
   const handleDeposit = async () => {
     if (!wallet.publicKey || !program) {
       notifications.show({
-        title: 'Error',
-        message: 'Please connect your wallet',
-        color: 'red',
-      })
-      return
+        title: "Error",
+        message: "Please connect your wallet",
+        color: "red",
+      });
+      return;
     }
 
     if (amountA <= 0 || amountB <= 0) {
       notifications.show({
-        title: 'Error',
-        message: 'Please enter valid amounts for both tokens',
-        color: 'red',
-      })
-      return
+        title: "Error",
+        message: "Please enter valid amounts for both tokens",
+        color: "red",
+      });
+      return;
     }
 
-    setDepositing(true)
+    setDepositing(true);
     try {
-      const [ammPda] = getAmmPda(program.programId, ammId)
-      const [poolAuthority] = getPoolAuthorityPda(program.programId, ammPda, mintA, mintB)
-      const [liquidityMint] = getLiquidityMintPda(program.programId, ammPda, mintA, mintB)
+      const [ammPda] = getAmmPda(program.programId, ammId);
+      const [poolAuthority] = getPoolAuthorityPda(
+        program.programId,
+        ammPda,
+        mintA,
+        mintB
+      );
+      const [liquidityMint] = getLiquidityMintPda(
+        program.programId,
+        ammPda,
+        mintA,
+        mintB
+      );
 
-      const poolAccountA = getAssociatedTokenAddressSync(mintA, poolAuthority, true)
-      const poolAccountB = getAssociatedTokenAddressSync(mintB, poolAuthority, true)
+      const poolAccountA = getAssociatedTokenAddressSync(
+        mintA,
+        poolAuthority,
+        true
+      );
+      const poolAccountB = getAssociatedTokenAddressSync(
+        mintB,
+        poolAuthority,
+        true
+      );
 
-      const depositorAccountA = getAssociatedTokenAddressSync(mintA, wallet.publicKey)
-      const depositorAccountB = getAssociatedTokenAddressSync(mintB, wallet.publicKey)
-      const depositorAccountLiquidity = getAssociatedTokenAddressSync(liquidityMint, wallet.publicKey)
+      const depositorAccountA = getAssociatedTokenAddressSync(
+        mintA,
+        wallet.publicKey
+      );
+      const depositorAccountB = getAssociatedTokenAddressSync(
+        mintB,
+        wallet.publicKey
+      );
+      const depositorAccountLiquidity = getAssociatedTokenAddressSync(
+        liquidityMint,
+        wallet.publicKey
+      );
 
-      const tx = await program.methods
+      const tx = await (program as any).methods
         .depositLiquidity(new BN(amountA), new BN(amountB))
         .accounts({
           pool: poolAddress,
@@ -112,27 +175,27 @@ export function DepositLiquidityForm({ ammId, poolAddress, mintA, mintB }: Depos
           tokenProgram: TOKEN_PROGRAM_ID,
           systemProgram: SystemProgram.programId,
         })
-        .rpc()
+        .rpc();
 
       notifications.show({
-        title: 'Success',
+        title: "Success",
         message: `Liquidity deposited! TX: ${tx}`,
-        color: 'green',
-      })
+        color: "green",
+      });
 
-      setAmountA(0)
-      setAmountB(0)
+      setAmountA(0);
+      setAmountB(0);
     } catch (error: any) {
-      console.error('Error depositing liquidity:', error)
+      console.error("Error depositing liquidity:", error);
       notifications.show({
-        title: 'Error',
+        title: "Error",
         message: `Failed to deposit liquidity: ${error.message || error}`,
-        color: 'red',
-      })
+        color: "red",
+      });
     } finally {
-      setDepositing(false)
+      setDepositing(false);
     }
-  }
+  };
 
   return (
     <Card shadow="sm" padding="lg" radius="md" withBorder>
@@ -144,7 +207,8 @@ export function DepositLiquidityForm({ ammId, poolAddress, mintA, mintB }: Depos
 
         {poolReserveA > 0 && poolReserveB > 0 && (
           <Text size="sm" c="dimmed">
-            Current Pool Ratio: {poolReserveA.toLocaleString()} : {poolReserveB.toLocaleString()}
+            Current Pool Ratio: {poolReserveA.toLocaleString()} :{" "}
+            {poolReserveB.toLocaleString()}
           </Text>
         )}
 
@@ -172,19 +236,26 @@ export function DepositLiquidityForm({ ammId, poolAddress, mintA, mintB }: Depos
           </Text>
         )}
 
-        <Button 
-          onClick={handleDeposit} 
-          fullWidth 
-          disabled={!wallet.publicKey || !program || depositing || amountA <= 0 || amountB <= 0}
+        <Button
+          onClick={handleDeposit}
+          fullWidth
+          disabled={
+            !wallet.publicKey ||
+            !program ||
+            depositing ||
+            amountA <= 0 ||
+            amountB <= 0
+          }
           loading={depositing}
         >
           Deposit Liquidity
         </Button>
 
         <Text size="xs" c="dimmed">
-          Note: Amounts will be adjusted to maintain the current pool ratio if the pool already has liquidity.
+          Note: Amounts will be adjusted to maintain the current pool ratio if
+          the pool already has liquidity.
         </Text>
       </Stack>
     </Card>
-  )
+  );
 }
