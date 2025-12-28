@@ -1,0 +1,24 @@
+[package]
+name = "mango"
+version = "0.1.0"
+description = "Mango Markets - Decentralized Trading Platform"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "mango"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+
+[dependencies]
+anchor-lang = "0.30.1"
+anchor-spl = "0.30.1"
+
+[dev-dependencies]
+solana-program-test = "1.18.0"
+solana-sdk = "1.18.0"
