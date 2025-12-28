@@ -1,17 +1,3 @@
-### GitHub "About" (copy/paste)
-
-**Description (≤ 350 chars)**
-**Full-stack Solana program playground: Rust programs + TypeScript frontend with token swap UI, Raydium AMM integration, and CPI helpers — packaged as a pnpm monorepo for rapid prototyping and learning.**
-
-**Suggested Topics**
-`solana` `rust` `typescript` `web3` `defi` `amm` `raydium` `dex` `token-swap` `cpi` `solana-program` `pnpm` `monorepo` `wallet`
-
----
-
-## README.md (drop-in replacement)
-
-# solana-programs-kit
-
 A full-stack Solana "programs + frontend" playground: Rust programs in `programs/`, CPI helpers in `CPI/`, and a TypeScript UI in `frontend/` for experimenting with token swaps and AMM integrations (incl. Raydium).
 
 > **Status:** WIP / early-stage.  
