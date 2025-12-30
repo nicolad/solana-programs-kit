@@ -20,11 +20,21 @@ import {
   IconChartDots,
   IconTableOptions,
   IconAnchor,
+  IconExchange,
+  IconUsers,
 } from "@tabler/icons-react";
 import { WalletBalance } from "./WalletBalance";
 
 export function Navigation({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+
+  // Featured: P2P Lending
+  const featuredLending = {
+    href: "/lending/paystream",
+    label: "Paystream P2P",
+    icon: <IconUsers size={18} />,
+    subtitle: "P2P Lending Matching",
+  };
 
   // Featured: Token Swap AMM
   const featuredProgram = {
@@ -224,6 +234,31 @@ export function Navigation({ children }: { children: React.ReactNode }) {
 
       <AppShell.Navbar p="md" style={{ overflowY: "auto" }}>
         <Stack gap="xs">
+          <AppShell.Section>
+            <Text size="xs" fw={700} c="grape" mb="xs">
+              ⭐ FEATURED LENDING
+            </Text>
+            <NavLink
+              component={Link}
+              href={featuredLending.href}
+              label={featuredLending.label}
+              description={featuredLending.subtitle}
+              leftSection={featuredLending.icon}
+              active={pathname === featuredLending.href}
+              styles={{
+                root: {
+                  borderRadius: "8px",
+                  "&[dataActive]": {
+                    background: "rgba(174, 62, 201, 0.15)",
+                    borderLeft: "3px solid rgb(174, 62, 201)",
+                  },
+                },
+              }}
+            />
+          </AppShell.Section>
+
+          <Divider my="sm" />
+
           <AppShell.Section>
             <Text size="xs" fw={700} c="blue" mb="xs">
               ⭐ FEATURED AMM

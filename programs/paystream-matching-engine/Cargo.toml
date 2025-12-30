@@ -1,0 +1,33 @@
+[package]
+name = "paystream_matching_engine"
+version = "0.1.0"
+description = "P2P lending matching engine that compresses APY spread"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "paystream_matching_engine"
+
+[features]
+default = []
+cpi = ["no-entrypoint"]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+idl-build = ["anchor-lang/idl-build", "anchor-spl/idl-build"]
+anchor-debug = []
+custom-heap = []
+custom-panic = []
+
+[dependencies]
+anchor-lang = { version = "0.32.1", features = ["init-if-needed"] }
+anchor-spl = { version = "0.32.1", features = ["metadata"] }
+
+[dev-dependencies]
+solana-program-test = "2.1"
+solana-sdk = "2.1"
+tokio = { version = "1.40", features = ["full"] }
+spl-token = "6.0"
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_os, values("solana"))'] }
